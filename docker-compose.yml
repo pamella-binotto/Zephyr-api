@@ -6,9 +6,9 @@ services:
     container_name: zephyr-postgres
     restart: always
     environment:
-      POSTGRES_DB: zephyr_db
-      POSTGRES_USER: zephyr
-      POSTGRES_PASSWORD: zephyr123
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
