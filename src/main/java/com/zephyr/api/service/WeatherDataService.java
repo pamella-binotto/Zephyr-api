@@ -5,6 +5,8 @@ import com.zephyr.api.WeatherData;
 import com.zephyr.api.repository.WeatherDataRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class WeatherDataService {
 
@@ -18,4 +20,19 @@ public class WeatherDataService {
     public WeatherData save(WeatherData weatherData){
         return repository.save(weatherData);
     }
+
+    public List<WeatherData> findAll() {
+        return repository.findAll();
+    }
+
+    public WeatherData findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Weather Data Not Found."));
+    }
+
+    public void delete(Long id){
+        WeatherData weatherData = repository.findById(id).
+                orElseThrow(() -> new RuntimeException("Weather Data Not Found."));
+    }
+
+
 }
