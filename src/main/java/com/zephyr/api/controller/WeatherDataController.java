@@ -1,7 +1,7 @@
 package com.zephyr.api.controller;
 
 
-import com.zephyr.api.WeatherData;
+import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.service.WeatherDataService;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +40,7 @@ public class WeatherDataController
         service.delete(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public WeatherData updateWeatherData(@PathVariable Long id,
                                          @RequestBody WeatherData weatherData) {
 

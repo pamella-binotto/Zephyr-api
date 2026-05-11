@@ -1,7 +1,7 @@
 package com.zephyr.api.service;
 
 
-import com.zephyr.api.WeatherData;
+import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.repository.WeatherDataRepository;
 import org.springframework.stereotype.Service;
 
