@@ -1,6 +1,7 @@
 package com.zephyr.api.service;
 
 
+import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.repository.WeatherDataRepository;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,16 @@ public class WeatherDataService {
 
 
     public WeatherData save(WeatherData weatherData){
+        return repository.save(weatherData);
+    }
+
+    public WeatherData save(WeatherDataRequestDTO dto){
+
+        WeatherData weatherData = new WeatherData();
+
+        weatherData.setTemperature(dto.getTemperature());
+        weatherData.setHumidity(dto.getHumidity());
+
         return repository.save(weatherData);
     }
 

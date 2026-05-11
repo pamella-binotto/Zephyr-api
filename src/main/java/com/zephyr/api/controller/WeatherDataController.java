@@ -1,6 +1,7 @@
 package com.zephyr.api.controller;
 
 
+import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.service.WeatherDataService;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,8 @@ public class WeatherDataController
 
 
     @PostMapping
-    public WeatherData createWeather(@RequestBody WeatherData weatherData){
-     return service.save(weatherData);
+    public WeatherData createWeather(@RequestBody WeatherDataRequestDTO dto){
+     return service.save(dto);
  }
 
     @GetMapping()
@@ -42,12 +43,12 @@ public class WeatherDataController
 
     @PutMapping("{id}")
     public WeatherData updateWeatherData(@PathVariable Long id,
-                                         @RequestBody WeatherData weatherData) {
+                                         @RequestBody WeatherDataRequestDTO dto) {
 
         WeatherData existing = service.findById(id);
 
-        existing.setTemperature(weatherData.getTemperature());
-        existing.setHumidity(weatherData.getHumidity());
+        existing.setTemperature(dto.getTemperature());
+        existing.setHumidity(dto.getHumidity());
 
         return service.save(existing);
     }
