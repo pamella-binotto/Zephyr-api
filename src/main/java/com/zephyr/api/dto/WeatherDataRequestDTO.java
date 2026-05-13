@@ -6,14 +6,14 @@ import jakarta.validation.constraints.Max;
 
 public class WeatherDataRequestDTO {
 
-    @NotNull
-    @Min(-100)
-    @Max(100)
+    @NotNull(message = "Temperature is required")
+    @Min(value = -100, message = "Temperature must be at least -100")
+    @Max( value = 100, message = "Temperature must be less than or equal to 100")
     private Double temperature;
 
-    @NotNull
-    @Min(0)
-    @Max(100)
+    @NotNull(message = "Humidity is required")
+    @Min(value = 0, message = "Humidity must be at least 0")
+    @Max(value = 100, message = "Humidity must be less than or equal to 100" )
     private Double humidity;
 
     public WeatherDataRequestDTO() {
