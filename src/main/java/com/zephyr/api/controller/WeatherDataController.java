@@ -5,6 +5,10 @@ import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.service.WeatherDataService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +26,8 @@ public class WeatherDataController
 
 
     @PostMapping
-    public WeatherData createWeather(@Valid @RequestBody WeatherDataRequestDTO dto){
-     return service.save(dto);
+    public ResponseEntity<WeatherData> createWeather(@Valid @RequestBody WeatherDataRequestDTO dto){
+     return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
  }
 
     @GetMapping()
