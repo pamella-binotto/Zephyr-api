@@ -31,23 +31,29 @@ public class WeatherDataController
  }
 
     @GetMapping()
-    public List<WeatherData> findAllWeatherData(){
-        return service.findAll();
+    public ResponseEntity <List<WeatherData>> findAllWeatherData(){
+        return  ResponseEntity.status(HttpStatus.OK).body(service.findAll());
     }
 
 
     @GetMapping("{id}")
-    public WeatherData findWeatherDataById(@PathVariable Long id){
-        return service.findById(id);
+    public ResponseEntity <WeatherData> findWeatherDataById(@PathVariable Long id){
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
     }
 
     @DeleteMapping("{id}")
-    public void deleteWeather(@PathVariable Long id){
+    public ResponseEntity <Void> deleteWeather(@PathVariable Long id){
+
         service.delete(id);
+
+        return ResponseEntity.noContent().build();
+
     }
 
+
     @PutMapping("{id}")
-    public WeatherData updateWeatherData(@PathVariable Long id,
+    public ResponseEntity<WeatherData> updateWeatherData(@PathVariable Long id,
                                         @Valid @RequestBody WeatherDataRequestDTO dto) {
 
         WeatherData existing = service.findById(id);
@@ -55,6 +61,6 @@ public class WeatherDataController
         existing.setTemperature(dto.getTemperature());
         existing.setHumidity(dto.getHumidity());
 
-        return service.save(existing);
+        return ResponseEntity.status(HttpStatus.OK).body(service.save(existing));
     }
 }
