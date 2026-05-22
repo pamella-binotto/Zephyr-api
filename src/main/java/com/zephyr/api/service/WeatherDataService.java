@@ -3,6 +3,7 @@ package com.zephyr.api.service;
 
 import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.entity.WeatherData;
+import com.zephyr.api.exception.WeatherDataNotFoundException;
 import com.zephyr.api.repository.WeatherDataRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,12 +38,13 @@ public class WeatherDataService {
     }
 
     public WeatherData findById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Weather Data Not Found."));
+        return repository.findById(id).orElseThrow(() -> new WeatherDataNotFoundException("Weather Data Not Found."));
     }
 
     public void delete(Long id){
         WeatherData weatherData = repository.findById(id).
-                orElseThrow(() -> new RuntimeException("Weather Data Not Found."));
+                orElseThrow(() -> new WeatherDataNotFoundException ("Weather Data Not Found."));
+        repository.delete(weatherData);
     }
 
 

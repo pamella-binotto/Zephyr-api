@@ -32,6 +32,19 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(WeatherDataNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleWeatherNotFound(
+            WeatherDataNotFoundException ex){
+
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+
 
 
 }
