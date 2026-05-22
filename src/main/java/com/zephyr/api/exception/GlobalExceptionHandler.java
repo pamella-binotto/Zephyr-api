@@ -1,9 +1,13 @@
 package com.zephyr.api.exception;
 
+import com.zephyr.api.exception.dto.ErrorResponseDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -15,8 +19,19 @@ public class GlobalExceptionHandler {
                 .getAllErrors()
                 .get(0)
                 .getDefaultMessage();
-        return ResponseEntity.badRequest().body(errorMessage);
+
+
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                errorMessage,
+                LocalDateTime.now()
+        );
+
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 
     }
+
+
 
 }
