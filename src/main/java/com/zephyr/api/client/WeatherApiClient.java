@@ -14,7 +14,7 @@ public class WeatherApiClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
 
-    public WeatherResponseDTO getWeather(String city) {
+    public WeatherResponseDTO getWeatherByCity(String city) {
 
         String url =  "https://api.openweathermap.org/data/2.5/weather?q="
                 + city
