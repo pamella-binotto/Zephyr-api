@@ -12,6 +12,6 @@ spring:
       hibernate:
         format_sql: true
 
-  weather:
-    api:
-      key: YOUR_API_KEY_HERE
+weather:
+  api:
+    key: YOUR_API_KEY_HERE
