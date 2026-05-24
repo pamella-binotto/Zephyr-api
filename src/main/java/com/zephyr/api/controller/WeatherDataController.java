@@ -2,6 +2,7 @@ package com.zephyr.api.controller;
 
 
 import com.zephyr.api.dto.WeatherDataRequestDTO;
+import com.zephyr.api.dto.external.WeatherResponseDTO;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.service.WeatherDataService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +38,7 @@ public class WeatherDataController {
     }
 
 
-    @Operation (summary = "Get all weather data")
+    @Operation(summary = "Get all weather data")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Weather data found with successfully"),
             @ApiResponse(responseCode = "404", description = "Weather data not found")
@@ -47,7 +48,7 @@ public class WeatherDataController {
         return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
     }
 
-    @Operation (summary = "Get weather data by id")
+    @Operation(summary = "Get weather data by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Weather data retrieved successfully")
     })
@@ -57,7 +58,21 @@ public class WeatherDataController {
         return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
     }
 
-    @Operation (summary = "Delete weather data")
+
+    @Operation(summary = "Get weather data by city")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "City retrieved successfully")
+    })
+    @GetMapping("/current/{city}")
+    public ResponseEntity<WeatherResponseDTO> getCurrentWeatherByCity(@PathVariable String city) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.getCurrentWeather(city));
+    }
+
+
+    @Operation(summary = "Delete weather data")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Weather data deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Weather data not found")
