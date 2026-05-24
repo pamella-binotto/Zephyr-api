@@ -1,9 +1,11 @@
 package com.zephyr.api.client;
 
 import com.zephyr.api.dto.external.WeatherResponseDTO;
+import com.zephyr.api.exception.WeatherCityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Component
 public class WeatherApiClient {
@@ -13,16 +15,23 @@ public class WeatherApiClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-
     public WeatherResponseDTO getWeatherByCity(String city) {
 
-        String url =  "https://api.openweathermap.org/data/2.5/weather?q="
+        String url = "https://api.openweathermap.org/data/2.5/weather?q="
                 + city
                 + "&appid="
                 + apiKey
                 + "&units=metric";
 
-        return restTemplate.getForObject(url, WeatherResponseDTO.class);
+        try {
 
+            return restTemplate.getForObject(url, WeatherResponseDTO.class);
+
+        } catch (HttpClientErrorException ex) {
+
+            throw new WeatherCityNotFoundException(
+                    String.format("City not found: %s", city)
+            );
+        }
     }
 }

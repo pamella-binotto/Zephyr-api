@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponseDTO> handleValidationErrors(MethodArgumentNotValidException ex){
+    public ResponseEntity<ErrorResponseDTO> handleValidationErrors(MethodArgumentNotValidException ex) {
 
         String errorMessage = ex.getBindingResult()
                 .getAllErrors()
@@ -35,17 +35,26 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WeatherDataNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleWeatherNotFound(
-            WeatherDataNotFoundException ex){
+            WeatherDataNotFoundException ex) {
 
         ErrorResponseDTO error = new ErrorResponseDTO(
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),
                 LocalDateTime.now()
         );
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-
+    @ExceptionHandler(WeatherCityNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> cityWeatherNotFound(
+            WeatherCityNotFoundException ex) {
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
 
 
 }
