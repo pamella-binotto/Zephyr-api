@@ -5,6 +5,7 @@ import com.zephyr.api.client.WeatherApiClient;
 import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.dto.external.WeatherResponseDTO;
 import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
+import com.zephyr.api.dto.response.ForecastResponseDTO;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.exception.WeatherDataNotFoundException;
 import com.zephyr.api.repository.WeatherDataRepository;
@@ -98,9 +99,14 @@ public class WeatherDataService {
 
         );
 
-
-
     }
+
+    public ForecastResponseDTO getForecast(String city){
+     return apiClient.getForecastByCity(city);
+    }
+
+
+
 
 
 }

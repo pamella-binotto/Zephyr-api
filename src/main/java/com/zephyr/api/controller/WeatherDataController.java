@@ -1,9 +1,11 @@
 package com.zephyr.api.controller;
 
 
+import com.zephyr.api.dto.ForecastItemDTO;
 import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.dto.external.WeatherResponseDTO;
 import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
+import com.zephyr.api.dto.response.ForecastResponseDTO;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.service.WeatherDataService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,6 +73,21 @@ public class WeatherDataController {
                 .status(HttpStatus.OK)
                 .body(service.getCurrentWeather(city));
     }
+
+
+    @Operation(summary = "Get forecast data by city")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "City retrieved successfully")
+    })
+    @GetMapping("/forecast/{city}")
+    public ResponseEntity<ForecastResponseDTO>getForecast(@PathVariable String city) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.getForecast(city));
+    }
+
+
 
 
     @Operation(summary = "Delete weather data")
