@@ -2,15 +2,18 @@ package com.zephyr.api.service;
 
 
 import com.zephyr.api.client.WeatherApiClient;
+import com.zephyr.api.dto.ForecastItemDTO;
 import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.dto.external.WeatherResponseDTO;
 import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
+import com.zephyr.api.dto.response.ForecastDayResponseDTO;
 import com.zephyr.api.dto.response.ForecastResponseDTO;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.exception.WeatherDataNotFoundException;
 import com.zephyr.api.repository.WeatherDataRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -67,17 +70,13 @@ public class WeatherDataService {
 
         if (windSpeedKm >= 80) {
             alert = "Alerta severo de ventos fortes";
-        }
-        else if (windSpeedKm >= 60) {
+        } else if (windSpeedKm >= 60) {
             alert = "Evite deslocamentos de moto ou bicicleta.";
-        }
-        else if (windSpeedKm >= 40) {
+        } else if (windSpeedKm >= 40) {
             alert = "Ventos fortes no dia de hoje";
-        }
-        else{
+        } else {
             alert = "Condições climáticas estáveis.";
         }
-
 
 
         WeatherData weatherData = new WeatherData();
@@ -101,12 +100,35 @@ public class WeatherDataService {
 
     }
 
-    public ForecastResponseDTO getForecast(String city){
-     return apiClient.getForecastByCity(city);
+    public List<ForecastDayResponseDTO> getForecast(String city) {
+
+        ForecastResponseDTO response =
+                apiClient.getForecastByCity(city);
+
+        List<ForecastDayResponseDTO> forecastList = new ArrayList<>();
+
+        for(
+                ForecastItemDTO item :response.getList())
+
+        {
+
+            Double windSpeedKm =
+                    (double) Math.round(item.getWind().getSpeed() * 3.6);
+
+            ForecastDayResponseDTO dto =
+                    new ForecastDayResponseDTO(
+
+                            item.getDt_txt(),
+                            item.getMain().getTemp(),
+                            item.getMain().getHumidity(),
+                            windSpeedKm
+                    );
+
+            forecastList.add(dto);
+        }
+        return forecastList;
+
     }
-
-
-
 
 
 }
