@@ -6,12 +6,16 @@ public class CurrentWeatherResponseDTO {
     private Double temperature;
     private Double humidity;
     private Double windSpeed;
+    private String alert;
 
-    public CurrentWeatherResponseDTO(String city, Double temperature, Double humidity,  Double windSpeed) {
+    public CurrentWeatherResponseDTO(String city, Double temperature,
+                                     Double humidity,  Double windSpeed,
+                                     String alert) {
         this.city = city;
         this.temperature = temperature;
         this.humidity = humidity;
         this.windSpeed = windSpeed;
+        this.alert = alert;
     }
 
     public String getCity() {
@@ -44,5 +48,13 @@ public class CurrentWeatherResponseDTO {
 
     public void setWindSpeed(Double windSpeed) {
         this.windSpeed = windSpeed;
+    }
+
+    public String getAlert() {
+        return alert;
+    }
+
+    public void setAlert(String alert) {
+        this.alert = alert;
     }
 }
