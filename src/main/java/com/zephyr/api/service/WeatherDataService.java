@@ -4,6 +4,7 @@ package com.zephyr.api.service;
 import com.zephyr.api.client.WeatherApiClient;
 import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.dto.external.WeatherResponseDTO;
+import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.exception.WeatherDataNotFoundException;
 import com.zephyr.api.repository.WeatherDataRepository;
@@ -23,11 +24,11 @@ public class WeatherDataService {
     }
 
 
-    public WeatherData save(WeatherData weatherData){
+    public WeatherData save(WeatherData weatherData) {
         return repository.save(weatherData);
     }
 
-    public WeatherData save(WeatherDataRequestDTO dto){
+    public WeatherData save(WeatherDataRequestDTO dto) {
 
         WeatherData weatherData = new WeatherData();
 
@@ -46,14 +47,23 @@ public class WeatherDataService {
         return repository.findById(id).orElseThrow(() -> new WeatherDataNotFoundException("Weather Data Not Found."));
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         WeatherData weatherData = repository.findById(id).
-                orElseThrow(() -> new WeatherDataNotFoundException ("Weather Data Not Found."));
+                orElseThrow(() -> new WeatherDataNotFoundException("Weather Data Not Found."));
         repository.delete(weatherData);
     }
 
-    public WeatherResponseDTO getCurrentWeather(String city){
-        return apiClient.getWeatherByCity(city);
+    public CurrentWeatherResponseDTO getCurrentWeather(String city) {
+
+        WeatherResponseDTO response = apiClient.getWeatherByCity(city);
+
+
+        return new CurrentWeatherResponseDTO(
+                city,
+                response.getMain().getTemp(),
+                response.getMain().getHumidity()
+        );
+
     }
 
 
