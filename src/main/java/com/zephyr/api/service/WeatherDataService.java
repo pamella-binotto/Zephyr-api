@@ -35,6 +35,8 @@ public class WeatherDataService {
 
         weatherData.setTemperature(dto.getTemperature());
         weatherData.setHumidity(dto.getHumidity());
+        weatherData.setCity(dto.getCity());
+
 
         return repository.save(weatherData);
     }
@@ -58,12 +60,14 @@ public class WeatherDataService {
 
         WeatherResponseDTO response = apiClient.getWeatherByCity(city);
 
-        Double windSpeedKm = response.getWind().getSpeed()*3.6;
+        Double windSpeedKm = (double) Math.round(response.getWind().getSpeed() * 3.6);
 
         WeatherData weatherData = new WeatherData();
 
         weatherData.setTemperature(response.getMain().getTemp());
         weatherData.setHumidity(response.getMain().getHumidity());
+        weatherData.setCity(city);
+
 
         repository.save(weatherData);
 

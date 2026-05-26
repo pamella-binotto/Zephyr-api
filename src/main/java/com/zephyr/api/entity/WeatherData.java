@@ -15,6 +15,7 @@ public class WeatherData {
 
     private Double temperature;
     private Double humidity;
+    private String city;
 
     public WeatherData () {
 
@@ -44,12 +45,21 @@ public class WeatherData {
         this.humidity = humidity;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     @Override
     public String toString() {
         return "WeatherData{" +
                 "id=" + id +
                 ", temperature=" + temperature +
                 ", humidity=" + humidity +
+                ", city='" + city + '\'' +
                 '}';
     }
 }

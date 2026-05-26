@@ -3,6 +3,7 @@ package com.zephyr.api.controller;
 
 import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.dto.external.WeatherResponseDTO;
+import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.service.WeatherDataService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,7 +65,7 @@ public class WeatherDataController {
             @ApiResponse(responseCode = "200", description = "City retrieved successfully")
     })
     @GetMapping("/current/{city}")
-    public ResponseEntity<WeatherResponseDTO> getCurrentWeatherByCity(@PathVariable String city) {
+    public ResponseEntity<CurrentWeatherResponseDTO> getCurrentWeatherByCity(@PathVariable String city) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
