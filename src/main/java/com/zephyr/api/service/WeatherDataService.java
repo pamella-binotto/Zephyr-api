@@ -18,6 +18,7 @@ public class WeatherDataService {
     private final WeatherDataRepository repository;
     private final WeatherApiClient apiClient;
 
+
     public WeatherDataService(WeatherDataRepository repository, WeatherApiClient apiClient) {
         this.repository = repository;
         this.apiClient = apiClient;
@@ -57,6 +58,8 @@ public class WeatherDataService {
 
         WeatherResponseDTO response = apiClient.getWeatherByCity(city);
 
+        Double windSpeedKm = response.getWind().getSpeed()*3.6;
+
         WeatherData weatherData = new WeatherData();
 
         weatherData.setTemperature(response.getMain().getTemp());
@@ -68,7 +71,9 @@ public class WeatherDataService {
         return new CurrentWeatherResponseDTO(
                 city,
                 response.getMain().getTemp(),
-                response.getMain().getHumidity()
+                response.getMain().getHumidity(),
+                windSpeedKm
+
         );
 
 
