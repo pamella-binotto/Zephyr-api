@@ -57,12 +57,21 @@ public class WeatherDataService {
 
         WeatherResponseDTO response = apiClient.getWeatherByCity(city);
 
+        WeatherData weatherData = new WeatherData();
+
+        weatherData.setTemperature(response.getMain().getTemp());
+        weatherData.setHumidity(response.getMain().getHumidity());
+
+        repository.save(weatherData);
+
 
         return new CurrentWeatherResponseDTO(
                 city,
                 response.getMain().getTemp(),
                 response.getMain().getHumidity()
         );
+
+
 
     }
 
