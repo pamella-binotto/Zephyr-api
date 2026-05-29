@@ -107,13 +107,11 @@ public class WeatherDataService {
         ForecastResponseDTO response =
                 apiClient.getForecastByCity(city);
 
-       Map<String, ForecastDayResponseDTO> forecastMap = new HashMap<>();
+        Map<String, ForecastDayResponseDTO> forecastMap = new HashMap<>();
 
 
-        for(
-                ForecastItemDTO item :response.getList())
-
-        {
+        for (
+                ForecastItemDTO item : response.getList()) {
             String date = item.getDt_txt().split(" ")[0];
 
             Double windSpeedKm =
@@ -132,21 +130,39 @@ public class WeatherDataService {
                 alert = "Condições climáticas estáveis.";
             }
 
-            if(!forecastMap.containsKey(date)){
+            if (!forecastMap.containsKey(date)) {
 
-            ForecastDayResponseDTO dto =
-                    new ForecastDayResponseDTO(
+                ForecastDayResponseDTO dto =
+                        new ForecastDayResponseDTO(
 
-                            date,
-                            item.getMain().getHumidity(),
-                            windSpeedKm,
-                            alert,
-                            item.getMain().getTemp_min(),
-                            item.getMain().getTemp_max()
+                                date,
+                                item.getMain().getHumidity(),
+                                windSpeedKm,
+                                alert,
+                                item.getMain().getTemp_min(),
+                                item.getMain().getTemp_max()
 
-                    );
+                        );
 
-            forecastMap.put(date, dto);}
+                forecastMap.put(date, dto);
+            } else {
+                ForecastDayResponseDTO existingForecast =
+                        forecastMap.get(date);
+
+                existingForecast.setMinTemp(
+                        Math.min(
+                                existingForecast.getMinTemp(),
+                                item.getMain().getTemp_min()
+                        )
+                );
+
+                existingForecast.setMaxTemp(
+                        Math.max(
+                                existingForecast.getMaxTemp(),
+                                item.getMain().getTemp_max()
+                        )
+                );
+            }
         }
         return new ArrayList<>(forecastMap.values());
 
