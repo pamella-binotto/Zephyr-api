@@ -7,13 +7,15 @@ public class ForecastDayResponseDTO {
     private Double temperature;
     private Double humidity;
     private Double windSpeed;
+    private String alert;
 
 
-    public ForecastDayResponseDTO(String date, Double temperature, Double humidity, Double windSpeed) {
+    public ForecastDayResponseDTO(String date, Double temperature, Double humidity, Double windSpeed, String alert) {
         this.date = date;
         this.temperature = temperature;
         this.humidity = humidity;
         this.windSpeed = windSpeed;
+        this.alert = alert;
     }
 
     public String getDate() {
@@ -48,4 +50,11 @@ public class ForecastDayResponseDTO {
         this.windSpeed = windSpeed;
     }
 
+    public String getAlert() {
+        return alert;
+    }
+
+    public void setAlert(String alert) {
+        this.alert = alert;
+    }
 }

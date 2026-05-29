@@ -115,13 +115,26 @@ public class WeatherDataService {
             Double windSpeedKm =
                     (double) Math.round(item.getWind().getSpeed() * 3.6);
 
+            String alert;
+
+            if (windSpeedKm >= 80) {
+                alert = "Alerta severo de ventos fortes";
+            } else if (windSpeedKm >= 60) {
+                alert = "Evite deslocamentos de moto ou bicicleta.";
+            } else if (windSpeedKm >= 40) {
+                alert = "Ventos fortes no dia de hoje";
+            } else {
+                alert = "Condições climáticas estáveis.";
+            }
+
             ForecastDayResponseDTO dto =
                     new ForecastDayResponseDTO(
 
                             item.getDt_txt(),
                             item.getMain().getTemp(),
                             item.getMain().getHumidity(),
-                            windSpeedKm
+                            windSpeedKm,
+                            alert
                     );
 
             forecastList.add(dto);
