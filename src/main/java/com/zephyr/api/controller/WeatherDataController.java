@@ -5,6 +5,7 @@ import com.zephyr.api.dto.ForecastItemDTO;
 import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.dto.external.WeatherResponseDTO;
 import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
+import com.zephyr.api.dto.response.ForecastDayResponseDTO;
 import com.zephyr.api.dto.response.ForecastResponseDTO;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.service.WeatherDataService;
@@ -80,7 +81,7 @@ public class WeatherDataController {
             @ApiResponse(responseCode = "200", description = "City retrieved successfully")
     })
     @GetMapping("/forecast/{city}")
-    public ResponseEntity<ForecastResponseDTO>getForecast(@PathVariable String city) {
+    public ResponseEntity<List<ForecastDayResponseDTO>> getForecast(@PathVariable String city) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)

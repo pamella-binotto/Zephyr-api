@@ -1,6 +1,5 @@
 package com.zephyr.api.dto.response;
 
-import com.zephyr.api.dto.ForecastItemDTO;
 
 public class ForecastDayResponseDTO {
 
