@@ -131,10 +131,12 @@ public class WeatherDataService {
                     new ForecastDayResponseDTO(
 
                             item.getDt_txt(),
-                            item.getMain().getTemp(),
                             item.getMain().getHumidity(),
                             windSpeedKm,
-                            alert
+                            alert,
+                            item.getMain().getTemp_min(),
+                            item.getMain().getTemp_max()
+
                     );
 
             forecastList.add(dto);

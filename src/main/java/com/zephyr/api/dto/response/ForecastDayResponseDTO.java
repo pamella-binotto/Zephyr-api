@@ -4,18 +4,21 @@ package com.zephyr.api.dto.response;
 public class ForecastDayResponseDTO {
 
     private String date;
-    private Double temperature;
     private Double humidity;
     private Double windSpeed;
     private String alert;
+    private Double minTemp;
+    private Double maxTemp;
 
 
-    public ForecastDayResponseDTO(String date, Double temperature, Double humidity, Double windSpeed, String alert) {
+    public ForecastDayResponseDTO(String date, Double humidity, Double windSpeed,
+                                  String alert, Double minTemp, Double maxTemp) {
         this.date = date;
-        this.temperature = temperature;
         this.humidity = humidity;
         this.windSpeed = windSpeed;
         this.alert = alert;
+        this.minTemp = minTemp;
+        this.maxTemp = maxTemp;
     }
 
     public String getDate() {
@@ -26,13 +29,6 @@ public class ForecastDayResponseDTO {
         this.date = date;
     }
 
-    public Double getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(Double temperature) {
-        this.temperature = temperature;
-    }
 
     public Double getHumidity() {
         return humidity;
@@ -53,8 +49,23 @@ public class ForecastDayResponseDTO {
     public String getAlert() {
         return alert;
     }
-
     public void setAlert(String alert) {
         this.alert = alert;
+    }
+
+    public Double getMinTemp() {
+        return minTemp;
+    }
+
+    public void setMinTemp(Double minTemp) {
+        this.minTemp = minTemp;
+    }
+
+    public Double getMaxTemp() {
+        return maxTemp;
+    }
+
+    public void setMaxTemp(Double maxTemp) {
+        this.maxTemp = maxTemp;
     }
 }
