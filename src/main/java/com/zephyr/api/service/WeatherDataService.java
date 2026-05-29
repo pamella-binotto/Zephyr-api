@@ -139,8 +139,8 @@ public class WeatherDataService {
                                 item.getMain().getHumidity(),
                                 windSpeedKm,
                                 alert,
-                                item.getMain().getTemp_min(),
-                                item.getMain().getTemp_max()
+                                item.getMain().getTemp(),
+                                item.getMain().getTemp()
 
                         );
 
@@ -152,14 +152,14 @@ public class WeatherDataService {
                 existingForecast.setMinTemp(
                         Math.min(
                                 existingForecast.getMinTemp(),
-                                item.getMain().getTemp_min()
+                                item.getMain().getTemp()
                         )
                 );
 
                 existingForecast.setMaxTemp(
                         Math.max(
                                 existingForecast.getMaxTemp(),
-                                item.getMain().getTemp_max()
+                                item.getMain().getTemp()
                         )
                 );
             }
