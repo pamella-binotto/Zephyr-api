@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class WeatherDataService {
@@ -105,17 +107,20 @@ public class WeatherDataService {
         ForecastResponseDTO response =
                 apiClient.getForecastByCity(city);
 
-        List<ForecastDayResponseDTO> forecastList = new ArrayList<>();
+       Map<String, ForecastDayResponseDTO> forecastMap = new HashMap<>();
+
 
         for(
                 ForecastItemDTO item :response.getList())
 
         {
+            String date = item.getDt_txt().split(" ")[0];
 
             Double windSpeedKm =
                     (double) Math.round(item.getWind().getSpeed() * 3.6);
 
             String alert;
+
 
             if (windSpeedKm >= 80) {
                 alert = "Alerta severo de ventos fortes";
@@ -127,10 +132,12 @@ public class WeatherDataService {
                 alert = "Condições climáticas estáveis.";
             }
 
+            if(!forecastMap.containsKey(date)){
+
             ForecastDayResponseDTO dto =
                     new ForecastDayResponseDTO(
 
-                            item.getDt_txt(),
+                            date,
                             item.getMain().getHumidity(),
                             windSpeedKm,
                             alert,
@@ -139,9 +146,9 @@ public class WeatherDataService {
 
                     );
 
-            forecastList.add(dto);
+            forecastMap.put(date, dto);}
         }
-        return forecastList;
+        return new ArrayList<>(forecastMap.values());
 
     }
 
