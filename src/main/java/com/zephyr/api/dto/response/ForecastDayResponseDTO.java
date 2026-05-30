@@ -5,20 +5,28 @@ public class ForecastDayResponseDTO {
 
     private String date;
     private Double humidity;
+
     private Double windSpeed;
+    private Double maxWindSpeed;
+
     private String alert;
+
     private Double minTemp;
     private Double maxTemp;
 
 
+
     public ForecastDayResponseDTO(String date, Double humidity, Double windSpeed,
-                                  String alert, Double minTemp, Double maxTemp) {
+                                  Double maxTemp, String alert, Double minTemp,
+                                  Double maxWindSpeed) {
         this.date = date;
         this.humidity = humidity;
         this.windSpeed = windSpeed;
+        this.maxWindSpeed = maxWindSpeed;
         this.alert = alert;
         this.minTemp = minTemp;
         this.maxTemp = maxTemp;
+
     }
 
     public String getDate() {
@@ -67,5 +75,13 @@ public class ForecastDayResponseDTO {
 
     public void setMaxTemp(Double maxTemp) {
         this.maxTemp = maxTemp;
+    }
+
+    public Double getMaxWindSpeed() {
+        return maxWindSpeed;
+    }
+
+    public void setMaxWindSpeed(Double maxWindSpeed) {
+        this.maxWindSpeed = maxWindSpeed;
     }
 }

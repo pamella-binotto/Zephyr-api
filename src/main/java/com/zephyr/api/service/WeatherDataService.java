@@ -13,10 +13,7 @@ import com.zephyr.api.exception.WeatherDataNotFoundException;
 import com.zephyr.api.repository.WeatherDataRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class WeatherDataService {
@@ -107,7 +104,7 @@ public class WeatherDataService {
         ForecastResponseDTO response =
                 apiClient.getForecastByCity(city);
 
-        Map<String, ForecastDayResponseDTO> forecastMap = new HashMap<>();
+        Map<String, ForecastDayResponseDTO> forecastMap = new LinkedHashMap<>();
 
 
         for (
@@ -138,9 +135,11 @@ public class WeatherDataService {
                                 date,
                                 item.getMain().getHumidity(),
                                 windSpeedKm,
+                                windSpeedKm,
                                 alert,
                                 item.getMain().getTemp(),
                                 item.getMain().getTemp()
+
 
                         );
 
@@ -160,6 +159,13 @@ public class WeatherDataService {
                         Math.max(
                                 existingForecast.getMaxTemp(),
                                 item.getMain().getTemp()
+                        )
+                );
+
+                existingForecast.setMaxWindSpeed(
+                        Math.max(
+                                existingForecast.getMaxWindSpeed(),
+                                windSpeedKm
                         )
                 );
             }
