@@ -6,6 +6,7 @@ import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.dto.external.WeatherResponseDTO;
 import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
 import com.zephyr.api.dto.response.ForecastDayResponseDTO;
+import com.zephyr.api.dto.response.ForecastHourResponseDTO;
 import com.zephyr.api.dto.response.ForecastResponseDTO;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.service.WeatherDataService;
@@ -86,6 +87,18 @@ public class WeatherDataController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.getForecast(city));
+    }
+
+    @Operation(summary = "Get hourly forecast data by city")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "City retrieved successfully")
+    })
+    @GetMapping("/forecast/hourly/{city}")
+    public ResponseEntity<List<ForecastHourResponseDTO>> getHourlyForecast(@PathVariable String city) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.getHourlyForecast(city));
     }
 
 

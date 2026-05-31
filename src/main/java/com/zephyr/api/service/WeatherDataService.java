@@ -7,6 +7,7 @@ import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.dto.external.WeatherResponseDTO;
 import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
 import com.zephyr.api.dto.response.ForecastDayResponseDTO;
+import com.zephyr.api.dto.response.ForecastHourResponseDTO;
 import com.zephyr.api.dto.response.ForecastResponseDTO;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.exception.WeatherDataNotFoundException;
@@ -114,6 +115,9 @@ public class WeatherDataService {
             Double windSpeedKm =
                     (double) Math.round(item.getWind().getSpeed() * 3.6);
 
+            Double rainProbability =
+                    (double) Math.round(item.getPop() * 100);
+
             String alert;
 
 
@@ -134,7 +138,7 @@ public class WeatherDataService {
 
                                 date,
                                 item.getMain().getHumidity(),
-                                item.getPop(),
+                                rainProbability,
                                 windSpeedKm,
                                 windSpeedKm,
                                 alert,
@@ -171,7 +175,7 @@ public class WeatherDataService {
                 existingForecast.setRainProbability(
                         Math.max(
                                 existingForecast.getRainProbability(),
-                                item.getPop()
+                                rainProbability
 
                         )
                 );
@@ -181,6 +185,64 @@ public class WeatherDataService {
         return new ArrayList<>(forecastMap.values());
 
     }
+
+    public List<ForecastHourResponseDTO> getHourlyForecast(String city){
+
+        ForecastResponseDTO response =
+                apiClient.getForecastByCity(city);
+
+
+        List<ForecastHourResponseDTO> hourlyForecast = new ArrayList<>();
+
+        for (ForecastItemDTO item : response.getList()){
+
+            Double windSpeedKm =
+                    (double) Math.round(item.getWind().getSpeed() * 3.6);
+
+            Double rainProbability =
+                    (double) Math.round(item.getPop() * 100);
+
+            String windAlert;
+            String rainAlert;
+
+            if (windSpeedKm >= 80) {
+                windAlert = "Alerta severo de ventos fortes";
+            } else if (windSpeedKm >= 60) {
+                windAlert = "Evite deslocamentos de moto ou bicicleta.";
+            } else if (windSpeedKm >= 40) {
+                windAlert = "Ventos fortes no dia de hoje";
+            } else {
+                windAlert = "Condições climáticas estáveis.";
+            }
+
+            if (rainProbability >= 70){
+                rainAlert = "Alta probabilidade de chuva";
+            } else if (rainProbability >= 50) {
+                rainAlert = "Probabilidade moderada de chuvas";
+            } else if (rainProbability >= 20){
+                rainAlert = "Probabilidade baixa de chuva";
+            } else {
+                rainAlert = "Não há probabilidade de chuvas";
+            }
+
+
+            ForecastHourResponseDTO dto =
+                    new ForecastHourResponseDTO(
+                            item.getDt_txt(),
+                            item.getMain().getTemp(),
+                            item.getMain().getHumidity(),
+                            windSpeedKm,
+                            rainProbability,
+                            windAlert,
+                            rainAlert
+                    );
+
+            hourlyForecast.add(dto);
+        }
+        return hourlyForecast;
+    }
+
+
 
 
 }
