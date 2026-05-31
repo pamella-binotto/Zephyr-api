@@ -5,6 +5,7 @@ public class ForecastDayResponseDTO {
 
     private String date;
     private Double humidity;
+    private Double rainProbability;
 
     private Double windSpeed;
     private Double maxWindSpeed;
@@ -16,11 +17,13 @@ public class ForecastDayResponseDTO {
 
 
 
-    public ForecastDayResponseDTO(String date, Double humidity, Double windSpeed,
+
+    public ForecastDayResponseDTO(String date, Double humidity, Double windSpeed, Double rainProbability,
                                   Double maxTemp, String alert, Double minTemp,
                                   Double maxWindSpeed) {
         this.date = date;
         this.humidity = humidity;
+        this.rainProbability = rainProbability;
         this.windSpeed = windSpeed;
         this.maxWindSpeed = maxWindSpeed;
         this.alert = alert;
@@ -84,4 +87,8 @@ public class ForecastDayResponseDTO {
     public void setMaxWindSpeed(Double maxWindSpeed) {
         this.maxWindSpeed = maxWindSpeed;
     }
+
+    public Double getRainProbability() {return rainProbability;}
+
+    public void setRainProbability(Double rainProbability) {this.rainProbability = rainProbability;}
 }

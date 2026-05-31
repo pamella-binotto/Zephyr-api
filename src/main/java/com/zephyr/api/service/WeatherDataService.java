@@ -134,12 +134,12 @@ public class WeatherDataService {
 
                                 date,
                                 item.getMain().getHumidity(),
+                                item.getPop(),
                                 windSpeedKm,
                                 windSpeedKm,
                                 alert,
                                 item.getMain().getTemp(),
                                 item.getMain().getTemp()
-
 
                         );
 
@@ -168,6 +168,14 @@ public class WeatherDataService {
                                 windSpeedKm
                         )
                 );
+                existingForecast.setRainProbability(
+                        Math.max(
+                                existingForecast.getRainProbability(),
+                                item.getPop()
+
+                        )
+                );
+
             }
         }
         return new ArrayList<>(forecastMap.values());
