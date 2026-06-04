@@ -8,7 +8,7 @@ public class ForecastHourResponseDTO {
     private Double windSpeed;
     private Double rainProbability;
     private String windAlert;
-    private String rainAlert
+    private String rainAlert;
 
     public String getDateTime() {
         return dateTime;

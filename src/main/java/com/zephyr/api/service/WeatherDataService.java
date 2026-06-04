@@ -23,6 +23,33 @@ public class WeatherDataService {
     private final WeatherApiClient apiClient;
 
 
+    private String getWindAlert(Double windSpeedKm) {
+
+        if (windSpeedKm >= 80) {
+            return "Alerta severo de ventos fortes";
+        } else if (windSpeedKm >= 60) {
+            return "Evite deslocamentos de moto ou bicicleta.";
+        } else if (windSpeedKm >= 40) {
+            return "Ventos fortes no dia de hoje";
+        }
+
+        return "Condições climáticas estáveis.";
+    }
+
+    private String getRainAlert(Double rainProbability) {
+
+        if (rainProbability >= 70) {
+            return "Alta probabilidade de chuva";
+        } else if (rainProbability >= 50) {
+            return "Probabilidade moderada de chuvas";
+        } else if (rainProbability >= 20) {
+            return "Probabilidade baixa de chuva";
+        }
+
+        return "Não há probabilidade de chuvas";
+    }
+
+
     public WeatherDataService(WeatherDataRepository repository, WeatherApiClient apiClient) {
         this.repository = repository;
         this.apiClient = apiClient;
@@ -66,17 +93,8 @@ public class WeatherDataService {
 
         Double windSpeedKm = (double) Math.round(response.getWind().getSpeed() * 3.6);
 
-        String alert;
+        String windAlert = getWindAlert(windSpeedKm);
 
-        if (windSpeedKm >= 80) {
-            alert = "Alerta severo de ventos fortes";
-        } else if (windSpeedKm >= 60) {
-            alert = "Evite deslocamentos de moto ou bicicleta.";
-        } else if (windSpeedKm >= 40) {
-            alert = "Ventos fortes no dia de hoje";
-        } else {
-            alert = "Condições climáticas estáveis.";
-        }
 
 
         WeatherData weatherData = new WeatherData();
@@ -94,7 +112,7 @@ public class WeatherDataService {
                 response.getMain().getTemp(),
                 response.getMain().getHumidity(),
                 windSpeedKm,
-                alert
+                windAlert
 
         );
 
@@ -118,18 +136,9 @@ public class WeatherDataService {
             Double rainProbability =
                     (double) Math.round(item.getPop() * 100);
 
-            String alert;
+            String windAlert = getWindAlert(windSpeedKm);
+            String rainAlert = getRainAlert(rainProbability);
 
-
-            if (windSpeedKm >= 80) {
-                alert = "Alerta severo de ventos fortes";
-            } else if (windSpeedKm >= 60) {
-                alert = "Evite deslocamentos de moto ou bicicleta.";
-            } else if (windSpeedKm >= 40) {
-                alert = "Ventos fortes no dia de hoje";
-            } else {
-                alert = "Condições climáticas estáveis.";
-            }
 
             if (!forecastMap.containsKey(date)) {
 
@@ -141,7 +150,8 @@ public class WeatherDataService {
                                 rainProbability,
                                 windSpeedKm,
                                 windSpeedKm,
-                                alert,
+                                windAlert,
+                                rainAlert,
                                 item.getMain().getTemp(),
                                 item.getMain().getTemp()
 
@@ -202,28 +212,9 @@ public class WeatherDataService {
             Double rainProbability =
                     (double) Math.round(item.getPop() * 100);
 
-            String windAlert;
-            String rainAlert;
+            String windAlert = getWindAlert(windSpeedKm);
+            String rainAlert = getRainAlert(rainProbability);
 
-            if (windSpeedKm >= 80) {
-                windAlert = "Alerta severo de ventos fortes";
-            } else if (windSpeedKm >= 60) {
-                windAlert = "Evite deslocamentos de moto ou bicicleta.";
-            } else if (windSpeedKm >= 40) {
-                windAlert = "Ventos fortes no dia de hoje";
-            } else {
-                windAlert = "Condições climáticas estáveis.";
-            }
-
-            if (rainProbability >= 70){
-                rainAlert = "Alta probabilidade de chuva";
-            } else if (rainProbability >= 50) {
-                rainAlert = "Probabilidade moderada de chuvas";
-            } else if (rainProbability >= 20){
-                rainAlert = "Probabilidade baixa de chuva";
-            } else {
-                rainAlert = "Não há probabilidade de chuvas";
-            }
 
 
             ForecastHourResponseDTO dto =
