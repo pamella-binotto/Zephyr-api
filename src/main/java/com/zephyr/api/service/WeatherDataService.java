@@ -13,6 +13,7 @@ import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.exception.WeatherDataNotFoundException;
 import com.zephyr.api.repository.WeatherDataRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.*;
 
@@ -102,7 +103,10 @@ public class WeatherDataService {
         repository.delete(weatherData);
     }
 
+    @Cacheable("currentWeather")
     public CurrentWeatherResponseDTO getCurrentWeather(String city) {
+
+        System.out.println("Consultando API externa");
 
         WeatherResponseDTO response = apiClient.getWeatherByCity(city);
 
@@ -133,6 +137,7 @@ public class WeatherDataService {
 
     }
 
+    @Cacheable("forecast")
     public List<ForecastDayResponseDTO> getForecast(String city) {
 
         ForecastResponseDTO response =
@@ -209,6 +214,7 @@ public class WeatherDataService {
             }
         }
 
+
         List<ForecastDayResponseDTO> forecastList =
                 new ArrayList<>(forecastMap.values());
 
@@ -232,6 +238,7 @@ public class WeatherDataService {
 
     }
 
+    @Cacheable("hourlyForecast")
     public List<ForecastHourResponseDTO> getHourlyForecast(String city){
 
         ForecastResponseDTO response =
