@@ -49,6 +49,21 @@ public class WeatherDataService {
         return "Não há probabilidade de chuvas";
     }
 
+    private String getDailySummary(Double windSpeedKm, Double rainProbability) {
+        if (windSpeedKm >= 60 && rainProbability >= 70) {
+            return "Evite deslocamentos e leve proteção contra chuva.";
+        }
+
+        if (windSpeedKm >= 60) {
+            return "Evite deslocamentos de moto ou bicicleta.";
+        }
+
+        if (rainProbability >= 70) {
+            return "Leve guarda-chuva ao sair de casa.";
+        }
+
+        return "Condições favoráveis para atividades externas.";
+    }
 
     public WeatherDataService(WeatherDataRepository repository, WeatherApiClient apiClient) {
         this.repository = repository;
@@ -153,7 +168,8 @@ public class WeatherDataService {
                                 windAlert,
                                 rainAlert,
                                 item.getMain().getTemp(),
-                                item.getMain().getTemp()
+                                item.getMain().getTemp(),
+                                null
 
                         );
 
@@ -192,7 +208,27 @@ public class WeatherDataService {
 
             }
         }
-        return new ArrayList<>(forecastMap.values());
+
+        List<ForecastDayResponseDTO> forecastList =
+                new ArrayList<>(forecastMap.values());
+
+        for (ForecastDayResponseDTO dto : forecastList) {
+
+            dto.setDailySummary(
+                    getDailySummary(
+                            dto.getMaxWindSpeed(),
+                            dto.getRainProbability()
+                    )
+            );
+        }
+
+        forecastList.sort(
+                Comparator.comparing(
+                        ForecastDayResponseDTO::getDate
+                )
+        );
+
+        return forecastList;
 
     }
 
