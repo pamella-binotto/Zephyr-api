@@ -167,13 +167,13 @@ public class WeatherDataService {
 
                                 date,
                                 item.getMain().getHumidity(),
+                                windSpeedKm,
                                 rainProbability,
-                                windSpeedKm,
-                                windSpeedKm,
+                                item.getMain().getTemp(),
                                 windAlert,
                                 rainAlert,
                                 item.getMain().getTemp(),
-                                item.getMain().getTemp(),
+                                windSpeedKm,
                                 null
 
                         );

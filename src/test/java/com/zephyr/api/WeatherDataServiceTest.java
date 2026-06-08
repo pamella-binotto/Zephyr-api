@@ -1,16 +1,21 @@
 package com.zephyr.api;
 
 import com.zephyr.api.client.WeatherApiClient;
+import com.zephyr.api.dto.ForecastItemDTO;
 import com.zephyr.api.dto.external.MainWeatherDTO;
 import com.zephyr.api.dto.external.WeatherResponseDTO;
 import com.zephyr.api.dto.external.WindDTO;
 import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
+import com.zephyr.api.dto.response.ForecastDayResponseDTO;
+import com.zephyr.api.dto.response.ForecastResponseDTO;
 import com.zephyr.api.repository.WeatherDataRepository;
 import com.zephyr.api.service.WeatherDataService;
 import org.junit.jupiter.api.BeforeEach;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -128,5 +133,49 @@ public class WeatherDataServiceTest {
                 result.getAlert()
         );
     }
+
+
+    @Test
+    void shouldReturnCombinadDailySummary() {
+
+        MainWeatherDTO main = new MainWeatherDTO();
+        main.setTemp(25.0);
+        main.setHumidity(80.0);
+
+        WindDTO wind = new WindDTO();
+        wind.setSpeed(kmToMs(80.0));
+
+        ForecastItemDTO item =
+                new ForecastItemDTO(
+                        main,
+                        wind,
+                        "2026-06-10 12:00:00",
+                        0.8
+                );
+
+        List<ForecastItemDTO> items =
+                List.of(item);
+
+        ForecastResponseDTO response =
+                new ForecastResponseDTO(items);
+
+        Mockito.when(
+                apiClient.getForecastByCity("Florianopolis")
+        ).thenReturn(response);
+
+        List<ForecastDayResponseDTO> result =
+                service.getForecast("Florianopolis");
+
+        ForecastDayResponseDTO forecast =
+                result.get(0);
+
+        assertEquals(
+                "Evite deslocamentos e leve proteção contra chuva.",
+                forecast.getDailySummary()
+        );
+
+    }
+
+
 
 }
