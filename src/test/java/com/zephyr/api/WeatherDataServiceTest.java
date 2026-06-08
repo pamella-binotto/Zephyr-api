@@ -8,6 +8,7 @@ import com.zephyr.api.dto.external.WindDTO;
 import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
 import com.zephyr.api.dto.response.ForecastDayResponseDTO;
 import com.zephyr.api.dto.response.ForecastResponseDTO;
+import com.zephyr.api.exception.WeatherDataNotFoundException;
 import com.zephyr.api.repository.WeatherDataRepository;
 import com.zephyr.api.service.WeatherDataService;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WeatherDataServiceTest {
 
@@ -176,6 +179,106 @@ public class WeatherDataServiceTest {
 
     }
 
+
+    @Test
+    void shouldReturnJustRainDailySummary() {
+
+        MainWeatherDTO main = new MainWeatherDTO();
+        main.setTemp(25.0);
+        main.setHumidity(80.0);
+
+        WindDTO wind = new WindDTO();
+        wind.setSpeed(kmToMs(1.0));
+
+        ForecastItemDTO item =
+                new ForecastItemDTO(
+                        main,
+                        wind,
+                        "2026-06-10 12:00:00",
+                        0.7
+                );
+
+        List<ForecastItemDTO> items =
+                List.of(item);
+
+        ForecastResponseDTO response =
+                new ForecastResponseDTO(items);
+
+        Mockito.when(
+                apiClient.getForecastByCity("Florianopolis")
+        ).thenReturn(response);
+
+        List<ForecastDayResponseDTO> result =
+                service.getForecast("Florianopolis");
+
+        ForecastDayResponseDTO forecast =
+                result.get(0);
+
+        assertEquals(
+                "Leve guarda-chuva ao sair de casa.",
+                forecast.getDailySummary()
+        );
+
+    }
+    @Test
+    void shouldReturnJustWindDailySummary() {
+
+        MainWeatherDTO main = new MainWeatherDTO();
+        main.setTemp(25.0);
+        main.setHumidity(80.0);
+
+        WindDTO wind = new WindDTO();
+        wind.setSpeed(kmToMs(65.0));
+
+        ForecastItemDTO item =
+                new ForecastItemDTO(
+                        main,
+                        wind,
+                        "2026-06-10 12:00:00",
+                        0.1
+                );
+
+        List<ForecastItemDTO> items =
+                List.of(item);
+
+        ForecastResponseDTO response =
+                new ForecastResponseDTO(items);
+
+        Mockito.when(
+                apiClient.getForecastByCity("Florianopolis")
+        ).thenReturn(response);
+
+        List<ForecastDayResponseDTO> result =
+                service.getForecast("Florianopolis");
+
+        ForecastDayResponseDTO forecast =
+                result.get(0);
+
+        assertEquals(
+                "Evite deslocamentos de moto ou bicicleta.",
+                forecast.getDailySummary()
+        );
+
+    }
+
+    @Test
+    void shouldThrowExceptionWhenWeatherDataNotFound() {
+
+        Mockito.when(
+                repository.findById(1L)
+        ).thenReturn(Optional.empty());
+
+        WeatherDataNotFoundException exception =
+                assertThrows(
+                        WeatherDataNotFoundException.class,
+                        () -> service.findById(1L)
+                );
+
+        assertEquals(
+                "Weather Data Not Found.",
+                exception.getMessage()
+        );
+    }
 
 
 }
