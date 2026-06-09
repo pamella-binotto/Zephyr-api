@@ -1,6 +1,7 @@
 package com.zephyr.api.service;
 
 import com.zephyr.api.dto.RegisterRequestDTO;
+import com.zephyr.api.dto.response.UserResponseDTO;
 import com.zephyr.api.entity.User;
 import com.zephyr.api.exception.UserAlreadyExistsException;
 import com.zephyr.api.repository.UserRepository;
@@ -31,4 +32,5 @@ public class AuthService {
 
         return repository.save(user);
     }
+
 }

@@ -1,9 +1,18 @@
 package com.zephyr.api.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class RegisterRequestDTO {
 
+    @NotBlank(message = "Name is required")
     private String name;
+
+    @NotBlank(message = "Password is required")
     private String password;
+
+    @NotBlank(message = "Email is required")
+    @Email (message = "Invalid email format")
     private String email;
 
 
@@ -13,7 +22,8 @@ public class RegisterRequestDTO {
         this.email = email;
     }
 
-    public RegisterRequestDTO() {}
+    public RegisterRequestDTO() {
+    }
 
     public String getName() {
         return name;
