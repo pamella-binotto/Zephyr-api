@@ -43,7 +43,7 @@ public class AuthService {
             throw new UserNotFoundException("User not found");
         }
         if(!dto.getPassword().equals(existingUser.get().getPassword())) {
-            throw new InvalidPasswordException("Incorrect password");
+            throw new InvalidPasswordException( "Incorrect password");
         }
         return existingUser.get();
     }

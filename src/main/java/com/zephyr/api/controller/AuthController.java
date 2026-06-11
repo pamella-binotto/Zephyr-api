@@ -1,6 +1,7 @@
 package com.zephyr.api.controller;
 
 
+import com.zephyr.api.dto.LoginRequestDTO;
 import com.zephyr.api.dto.RegisterRequestDTO;
 import com.zephyr.api.dto.WeatherDataRequestDTO;
 import com.zephyr.api.dto.response.UserResponseDTO;
@@ -46,6 +47,26 @@ public class AuthController {
         );
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(response);
+    }
+
+    @Operation(summary = "Create new login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request data"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    }
+    )
+    @PostMapping("/login")
+    public ResponseEntity<UserResponseDTO> loginUser (@Valid @RequestBody LoginRequestDTO dto) {
+
+        User user = authService.login(dto);
+
+        UserResponseDTO response = new UserResponseDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        );
+        return ResponseEntity.ok(response);
     }
 
 }
