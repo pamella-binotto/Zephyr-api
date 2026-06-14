@@ -8,6 +8,7 @@ import com.zephyr.api.exception.InvalidPasswordException;
 import com.zephyr.api.exception.UserAlreadyExistsException;
 import com.zephyr.api.exception.UserNotFoundException;
 import com.zephyr.api.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,9 +17,11 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository repository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public AuthService(UserRepository repository) {
+    public AuthService(UserRepository repository, BCryptPasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User register(RegisterRequestDTO dto) {
@@ -30,7 +33,7 @@ public class AuthService {
         User user = new User(
                 dto.getName(),
                 dto.getEmail(),
-                dto.getPassword()
+                passwordEncoder.encode(dto.getPassword())
         );
 
         return repository.save(user);
@@ -42,7 +45,10 @@ public class AuthService {
         if (existingUser.isEmpty()) {
             throw new UserNotFoundException("User not found");
         }
-        if(!dto.getPassword().equals(existingUser.get().getPassword())) {
+        if(passwordEncoder.matches(
+                dto.getPassword(),
+                existingUser.get().getPassword()
+        )) {
             throw new InvalidPasswordException( "Incorrect password");
         }
         return existingUser.get();
