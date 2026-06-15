@@ -45,7 +45,7 @@ public class AuthService {
         if (existingUser.isEmpty()) {
             throw new UserNotFoundException("User not found");
         }
-        if(passwordEncoder.matches(
+        if(!passwordEncoder.matches(
                 dto.getPassword(),
                 existingUser.get().getPassword()
         )) {

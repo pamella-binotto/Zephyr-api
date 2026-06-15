@@ -49,7 +49,8 @@ public class AuthController {
                 .body(response);
     }
 
-    @Operation(summary = "Create new login")
+
+    @Operation(summary = "Create new login with authentication")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Login successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid request data"),
@@ -57,7 +58,7 @@ public class AuthController {
     }
     )
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDTO> loginUser (@Valid @RequestBody LoginRequestDTO dto) {
+    public ResponseEntity<UserResponseDTO> loginAuthUser (@Valid @RequestBody LoginRequestDTO dto) {
 
         User user = authService.login(dto);
 
