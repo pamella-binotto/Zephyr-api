@@ -4,10 +4,12 @@ package com.zephyr.api.controller;
 import com.zephyr.api.dto.LoginRequestDTO;
 import com.zephyr.api.dto.RegisterRequestDTO;
 import com.zephyr.api.dto.WeatherDataRequestDTO;
+import com.zephyr.api.dto.response.LoginResponseDTO;
 import com.zephyr.api.dto.response.UserResponseDTO;
 import com.zephyr.api.entity.User;
 import com.zephyr.api.entity.WeatherData;
 import com.zephyr.api.service.AuthService;
+import com.zephyr.api.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -24,8 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-    public AuthController(AuthService authService) {this.authService = authService;}
+    private final JwtService jwtService;
 
+    public AuthController(AuthService authService, JwtService jwtService) {
+        this.authService = authService;
+        this.jwtService = jwtService;
+    }
 
 
     @Operation(summary = "Create new register")
@@ -36,7 +42,7 @@ public class AuthController {
     }
     )
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO>createUser (@Valid @RequestBody RegisterRequestDTO dto) {
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody RegisterRequestDTO dto) {
 
         User user = authService.register(dto);
 
@@ -58,15 +64,14 @@ public class AuthController {
     }
     )
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDTO> loginAuthUser (@Valid @RequestBody LoginRequestDTO dto) {
+    public ResponseEntity<LoginResponseDTO> loginAuthUser(@Valid @RequestBody LoginRequestDTO dto) {
 
         User user = authService.login(dto);
 
-        UserResponseDTO response = new UserResponseDTO(
-                user.getId(),
-                user.getName(),
-                user.getEmail()
-        );
+        String token = jwtService.generateToken(user.getEmail());
+
+        LoginResponseDTO response = new LoginResponseDTO(token);
+
         return ResponseEntity.ok(response);
     }
 
