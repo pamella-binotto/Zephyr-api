@@ -1,10 +1,16 @@
 package com.zephyr.api.service;
 
 
+import com.zephyr.api.dto.FavoriteCityRequestDTO;
 import com.zephyr.api.entity.FavoriteCity;
+import com.zephyr.api.entity.User;
+import com.zephyr.api.exception.UserNotFoundException;
 import com.zephyr.api.repository.FavoriteCityRepository;
 import com.zephyr.api.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class FavoriteCityService {
@@ -14,11 +20,26 @@ public class FavoriteCityService {
 
     public FavoriteCityService(FavoriteCityRepository repository,
                                UserRepository userRepository) {
-        this.repository = repository,
-                this.userRepository = userRepository
+        this.repository = repository;
+                this.userRepository = userRepository;
     }
 
-    public FavoriteCity save(FavoriteCity favoriteCity) {
+    public FavoriteCity save (FavoriteCityRequestDTO dto) {
+
+        String email = (String) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        FavoriteCity favoriteCity = new FavoriteCity(
+                dto.getCity(),
+                user
+        );
+
         return repository.save(favoriteCity);
     }
+
 }
+
