@@ -9,6 +9,7 @@ import com.zephyr.api.service.FavoriteCityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +36,16 @@ public class FavoriteCityController {
     @PostMapping("/favorite")
 
     public ResponseEntity<FavoriteCityResponseDTO> saveFavoriteCity(
-            @RequestBody FavoriteCityRequestDTO favoriteCityRequestDTO) {
-        return null;
+            @RequestBody FavoriteCityRequestDTO dto) {
+
+        FavoriteCity city = favoriteCityService.save(dto);
+
+        FavoriteCityResponseDTO response = new FavoriteCityResponseDTO(
+                city.getId(),
+                city.getCityName()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 }
