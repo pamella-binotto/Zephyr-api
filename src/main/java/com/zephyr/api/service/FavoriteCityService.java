@@ -10,6 +10,7 @@ import com.zephyr.api.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,6 +40,18 @@ public class FavoriteCityService {
         );
 
         return repository.save(favoriteCity);
+    }
+
+    public List<FavoriteCity> findAllByUser () {
+
+        String email = (String) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        User favoriteOfUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
+
+        return repository.findByUser(favoriteOfUser);
     }
 
 }

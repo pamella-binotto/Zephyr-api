@@ -11,10 +11,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/city")
@@ -47,5 +47,31 @@ public class FavoriteCityController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(response);
+    }
+
+    @Operation(summary = "Get favorite city")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Favorite city found with successfully"),
+            @ApiResponse(responseCode = "404", description = "Favorite city data not found")
+    }
+    )
+    @GetMapping("favorite")
+
+    public ResponseEntity<List<FavoriteCityResponseDTO>> findAllFavoriteCity() {
+
+       List <FavoriteCity> cities = favoriteCityService.findAllByUser();
+
+        List<FavoriteCityResponseDTO> response = new ArrayList<>();
+
+        for (FavoriteCity city : cities) {
+            response.add(
+                    new FavoriteCityResponseDTO(
+                            city.getId(),
+                            city.getCityName()
+                    )
+            );
+
+        }
+        return ResponseEntity.ok(response);
     }
 }

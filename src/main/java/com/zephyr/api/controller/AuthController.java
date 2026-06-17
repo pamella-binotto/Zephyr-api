@@ -76,6 +76,13 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+
+    @Operation(summary = "Authentication for user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authentication with successfully."),
+            @ApiResponse(responseCode = "404", description = "User not authenticated.")
+    }
+    )
     @GetMapping("/me")
     public ResponseEntity<String> me(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
