@@ -220,6 +220,14 @@ public class WeatherDataService {
 
         for (ForecastDayResponseDTO dto : forecastList) {
 
+            dto.setRainAlert(
+                    getRainAlert(dto.getRainProbability())
+            );
+
+            dto.setWindAlert(
+                    getWindAlert(dto.getMaxWindSpeed())
+            );
+
             dto.setDailySummary(
                     getDailySummary(
                             dto.getMaxWindSpeed(),
