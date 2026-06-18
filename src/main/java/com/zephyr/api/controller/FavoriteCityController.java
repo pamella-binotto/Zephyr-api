@@ -74,4 +74,18 @@ public class FavoriteCityController {
         }
         return ResponseEntity.ok(response);
     }
+
+    @Operation(summary = "Delete favorite city")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Favorite city deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Favorite city not found")
+    })
+    @DeleteMapping("/favorite/{id}")
+    public ResponseEntity<Void> deleteFavoriteCity(@PathVariable Long id) {
+
+        favoriteCityService.delete(id);
+
+        return ResponseEntity.noContent().build();
+
+    }
 }

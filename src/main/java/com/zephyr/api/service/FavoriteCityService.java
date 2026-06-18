@@ -4,6 +4,7 @@ package com.zephyr.api.service;
 import com.zephyr.api.dto.FavoriteCityRequestDTO;
 import com.zephyr.api.entity.FavoriteCity;
 import com.zephyr.api.entity.User;
+import com.zephyr.api.exception.FavoriteCityNotFoundException;
 import com.zephyr.api.exception.UserNotFoundException;
 import com.zephyr.api.repository.FavoriteCityRepository;
 import com.zephyr.api.repository.UserRepository;
@@ -53,6 +54,30 @@ public class FavoriteCityService {
 
         return repository.findByUser(favoriteOfUser);
     }
+
+    public void delete (Long id){
+
+        String email = (String) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        User deleteFavorite = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
+
+        FavoriteCity city = repository.findById(id)
+                .orElseThrow(() ->
+                        new FavoriteCityNotFoundException("Favorite city not found."));
+
+        if (!city.getUser().getId().equals(deleteFavorite.getId())) {
+            throw new FavoriteCityNotFoundException(
+                    "This city does not belong to the logged user."
+            );
+        }
+
+        repository.delete(city);
+    }
+
+
 
 }
 
