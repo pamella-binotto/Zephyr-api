@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,6 +74,45 @@ public class FavoriteCityServiceTest {
 
         assertEquals("Florianopolis", result.getCityName());
 
+    }
+
+    @Test
+    void shouldFindAllFavoriteCitiesByUser() {
+
+        String email = "pam@email.com";
+
+        User user = new User(
+                "Pamella",
+                email,
+                "1234"
+        );
+
+        FavoriteCity city1 = new FavoriteCity("Florianopolis", user);
+        FavoriteCity city2 = new FavoriteCity("Sao Jose", user);
+
+        List <FavoriteCity> cities =
+                List.of(city1, city2);
+
+        SecurityContext context = Mockito.mock(SecurityContext.class);
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+
+        Mockito.when(authentication.getPrincipal()).thenReturn(email);
+
+        Mockito.when(context.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(context);
+
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        Mockito.when(favoriteCityRepository.findByUser(user)).thenReturn(cities);
+
+        List <FavoriteCity> result = favoriteCityService.findAllByUser();
+
+        assertEquals(2, result.size());
+
+        assertEquals("Florianopolis", result.get(0).getCityName());
+        assertEquals("Sao Jose", result.get(1).getCityName());
     }
 }
 
