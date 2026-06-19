@@ -75,6 +75,7 @@ public class FavoriteCityController {
         return ResponseEntity.ok(response);
     }
 
+
     @Operation(summary = "Delete favorite city")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Favorite city deleted successfully"),
