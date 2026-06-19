@@ -3,6 +3,7 @@ package com.zephyr.api.controller;
 
 import com.zephyr.api.dto.FavoriteCityRequestDTO;
 import com.zephyr.api.dto.response.FavoriteCityResponseDTO;
+import com.zephyr.api.dto.response.FavoriteCityWeatherResponseDTO;
 import com.zephyr.api.dto.response.UserResponseDTO;
 import com.zephyr.api.entity.FavoriteCity;
 import com.zephyr.api.service.FavoriteCityService;
@@ -75,6 +76,20 @@ public class FavoriteCityController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Get weather from favorite city")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Favorite cities weather found successfully."),
+            @ApiResponse(responseCode = "404", description = "Favorite cities not found")
+    })
+    @GetMapping("/favorite/weather")
+    public ResponseEntity<List<FavoriteCityWeatherResponseDTO>>
+    getFavoriteCitiesWeather() {
+
+        List<FavoriteCityWeatherResponseDTO> response =
+                favoriteCityService.getFavoriteCitiesWeather();
+
+        return ResponseEntity.ok(response);
+    }
 
     @Operation(summary = "Delete favorite city")
     @ApiResponses(value = {
