@@ -4,14 +4,14 @@ public class FavoriteCityWeatherResponseDTO {
 
     private String city;
     private Double temperature;
-    private Integer humidity;
+    private Double humidity;
     private Double windSpeed;
     private String windAlert;
 
     public FavoriteCityWeatherResponseDTO() {}
 
     public FavoriteCityWeatherResponseDTO(String city, Double temperature,
-                                          Integer humidity, Double windSpeed,
+                                          Double humidity, Double windSpeed,
                                           String windAlert) {
         this.city = city;
         this.temperature = temperature;
@@ -36,11 +36,11 @@ public class FavoriteCityWeatherResponseDTO {
         this.temperature = temperature;
     }
 
-    public Integer getHumidity() {
+    public Double getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(Integer humidity) {
+    public void setHumidity(Double humidity) {
         this.humidity = humidity;
     }
 

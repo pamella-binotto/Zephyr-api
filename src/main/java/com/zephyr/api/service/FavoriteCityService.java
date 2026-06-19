@@ -2,6 +2,8 @@ package com.zephyr.api.service;
 
 
 import com.zephyr.api.dto.FavoriteCityRequestDTO;
+import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
+import com.zephyr.api.dto.response.FavoriteCityWeatherResponseDTO;
 import com.zephyr.api.entity.FavoriteCity;
 import com.zephyr.api.entity.User;
 import com.zephyr.api.exception.FavoriteCityNotFoundException;
@@ -11,22 +13,27 @@ import com.zephyr.api.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class FavoriteCityService {
 
     private final FavoriteCityRepository repository;
     private final UserRepository userRepository;
+    private final WeatherDataService weatherDataService;
 
     public FavoriteCityService(FavoriteCityRepository repository,
-                               UserRepository userRepository) {
+                               UserRepository userRepository,
+                               WeatherDataService weatherDataService) {
+
         this.repository = repository;
-                this.userRepository = userRepository;
+        this.userRepository = userRepository;
+        this.weatherDataService = weatherDataService;
     }
 
-    public FavoriteCity save (FavoriteCityRequestDTO dto) {
+    public FavoriteCity save(FavoriteCityRequestDTO dto) {
 
         String email = (String) SecurityContextHolder.getContext()
                 .getAuthentication()
@@ -43,7 +50,7 @@ public class FavoriteCityService {
         return repository.save(favoriteCity);
     }
 
-    public List<FavoriteCity> findAllByUser () {
+    public List<FavoriteCity> findAllByUser() {
 
         String email = (String) SecurityContextHolder.getContext()
                 .getAuthentication()
@@ -55,7 +62,7 @@ public class FavoriteCityService {
         return repository.findByUser(favoriteOfUser);
     }
 
-    public void delete (Long id){
+    public void delete(Long id) {
 
         String email = (String) SecurityContextHolder.getContext()
                 .getAuthentication()
@@ -77,6 +84,33 @@ public class FavoriteCityService {
         repository.delete(city);
     }
 
+    public List<FavoriteCityWeatherResponseDTO> getFavoriteCitiesWeather() {
+
+        List<FavoriteCity> cities = findAllByUser();
+
+        List<FavoriteCityWeatherResponseDTO> response =
+                new ArrayList<>();
+
+        for (FavoriteCity city : cities) {
+
+            CurrentWeatherResponseDTO weather =
+                    weatherDataService.getCurrentWeather(
+                            city.getCityName()
+                    );
+
+            response.add(
+                    new FavoriteCityWeatherResponseDTO(
+                            weather.getCity(),
+                            weather.getTemperature(),
+                            weather.getHumidity(),
+                            weather.getWindSpeed(),
+                            weather.getAlert()
+                    )
+            );
+        }
+
+        return response;
+    }
 
 
 }
