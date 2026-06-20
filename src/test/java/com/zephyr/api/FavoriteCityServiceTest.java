@@ -114,5 +114,41 @@ public class FavoriteCityServiceTest {
         assertEquals("Florianopolis", result.get(0).getCityName());
         assertEquals("Sao Jose", result.get(1).getCityName());
     }
+
+    @Test
+    void shouldDeleteFavoriteCity(){
+
+        String email = "pam@email.com";
+        User user = new User(
+                "Pamella",
+                email,
+                "1234"
+        );
+
+        user.setId(1L);
+
+        FavoriteCity city = new FavoriteCity("Florianopolis", user);
+
+        city.setId(1L);
+
+        SecurityContext context = Mockito.mock(SecurityContext.class);
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+
+        Mockito.when(authentication.getPrincipal()).thenReturn(email);
+
+        Mockito.when(context.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(context);
+
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        Mockito.when(favoriteCityRepository.findById(1L)).thenReturn(Optional.of(city));
+
+        favoriteCityService.delete(1L);
+
+        Mockito.verify(favoriteCityRepository).delete(city);
+
+    }
 }
 
