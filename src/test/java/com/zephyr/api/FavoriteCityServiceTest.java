@@ -3,6 +3,7 @@ package com.zephyr.api;
 import com.zephyr.api.dto.FavoriteCityRequestDTO;
 import com.zephyr.api.entity.FavoriteCity;
 import com.zephyr.api.entity.User;
+import com.zephyr.api.exception.FavoriteCityNotFoundException;
 import com.zephyr.api.repository.FavoriteCityRepository;
 import com.zephyr.api.repository.UserRepository;
 import com.zephyr.api.service.FavoriteCityService;
@@ -148,6 +149,52 @@ public class FavoriteCityServiceTest {
         favoriteCityService.delete(1L);
 
         Mockito.verify(favoriteCityRepository).delete(city);
+
+    }
+
+    @Test
+    void shouldThrowException(){
+
+        String email = "pam@email.com";
+        User loggedUser = new User(
+                "Pamella",
+                email,
+                "1234"
+        );
+
+        loggedUser.setId(1L);
+
+        User anotherUser = new User(
+                "Joao",
+                "joao@email.com",
+                "1234"
+        );
+
+        anotherUser.setId(2L);
+
+        FavoriteCity city = new FavoriteCity("Florianopolis", anotherUser);
+
+        city.setId(1L);
+
+        SecurityContext context = Mockito.mock(SecurityContext.class);
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+
+        Mockito.when(authentication.getPrincipal()).thenReturn(email);
+
+        Mockito.when(context.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(context);
+
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(loggedUser));
+
+        Mockito.when(favoriteCityRepository.findById(1L)).thenReturn(Optional.of(city));
+
+
+        assertThrows(
+                FavoriteCityNotFoundException.class,
+                () -> favoriteCityService.delete(1L)
+        );
 
     }
 }
