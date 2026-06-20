@@ -1,6 +1,8 @@
 package com.zephyr.api;
 
 import com.zephyr.api.dto.FavoriteCityRequestDTO;
+import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
+import com.zephyr.api.dto.response.FavoriteCityWeatherResponseDTO;
 import com.zephyr.api.entity.FavoriteCity;
 import com.zephyr.api.entity.User;
 import com.zephyr.api.exception.FavoriteCityNotFoundException;
@@ -196,6 +198,94 @@ public class FavoriteCityServiceTest {
                 () -> favoriteCityService.delete(1L)
         );
 
+    }
+
+    @Test
+    void shouldGetFavoriteCitiesWeather() {
+
+
+        String email = "pam@email.com";
+
+        User user = new User(
+                "Pamella",
+                email,
+                "1234"
+        );
+        user.setId(1L);
+
+        FavoriteCity city = new FavoriteCity(
+                "Florianopolis",
+                user
+        );
+
+        List<FavoriteCity> cities = List.of(city);
+
+        CurrentWeatherResponseDTO weather =
+                new CurrentWeatherResponseDTO(
+                        "Florianopolis",
+                        20.0,
+                        80.0,
+                        10.0,
+                        "Tudo certo"
+                );
+
+        SecurityContext context =
+                Mockito.mock(SecurityContext.class);
+
+        Authentication authentication =
+                Mockito.mock(Authentication.class);
+
+        Mockito.when(authentication.getPrincipal())
+                .thenReturn(email);
+
+        Mockito.when(context.getAuthentication())
+                .thenReturn(authentication);
+
+        SecurityContextHolder.setContext(context);
+
+        Mockito.when(userRepository.findByEmail(email))
+                .thenReturn(Optional.of(user));
+
+        Mockito.when(favoriteCityRepository.findByUser(user))
+                .thenReturn(cities);
+
+        Mockito.when(
+                weatherDataService.getCurrentWeather(
+                        "Florianopolis"
+                )
+        ).thenReturn(weather);
+
+
+        List<FavoriteCityWeatherResponseDTO> result =
+                favoriteCityService.getFavoriteCitiesWeather();
+
+
+        assertEquals(1, result.size());
+
+        assertEquals(
+                "Florianopolis",
+                result.get(0).getCity()
+        );
+
+        assertEquals(
+                20.0,
+                result.get(0).getTemperature()
+        );
+
+        assertEquals(
+                80.0,
+                result.get(0).getHumidity()
+        );
+
+        assertEquals(
+                10.0,
+                result.get(0).getWindSpeed()
+        );
+
+        assertEquals(
+                "Tudo certo",
+                result.get(0).getWindAlert()
+        );
     }
 }
 
