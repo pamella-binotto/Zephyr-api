@@ -1,37 +1,62 @@
 # 🌦️ Zephyr API
 
-API REST desenvolvida com Java e Spring Boot para monitoramento climático em tempo real, consumo de APIs externas de previsão do tempo, geração de alertas inteligentes e processamento de eventos meteorológicos.
+API REST desenvolvida com Java e Spring Boot para monitoramento climático em tempo real, autenticação de usuários, gerenciamento de cidades favoritas e geração de alertas inteligentes com base em dados meteorológicos obtidos da OpenWeather API.
 
 ---
 
 ## 🚀 Tecnologias utilizadas
 
-- Java 17
-- Spring Boot
-- Spring Web
-- Spring Data JPA
-- PostgreSQL
-- Hibernate
-- Swagger / OpenAPI
-- Maven
-- Docker
-- OpenWeather API
+* Java 17
+* Spring Boot
+* Spring Web
+* Spring Data JPA
+* Spring Security
+* JWT Authentication
+* Spring Cache
+* PostgreSQL
+* Hibernate / JPA
+* Swagger / OpenAPI
+* JUnit 5
+* Mockito
+* Maven
+* Docker & Docker Compose
+* OpenWeather API
 
 ---
 
 ## 📌 Funcionalidades atuais
 
-- ✅ CRUD de dados meteorológicos
-- ✅ Integração com API externa de clima (OpenWeather)
-- ✅ Consulta de clima atual por cidade
-- ✅ Consulta de previsão climática
-- ✅ Conversão automática de velocidade do vento para km/h
-- ✅ Sistema de alertas climáticos baseado em velocidade do vento
-- ✅ Tratamento global de exceções
-- ✅ DTOs personalizados para desacoplamento da API externa
-- ✅ Documentação automática com Swagger
-- ✅ Containerização com Docker
-- ✅ Estrutura preparada para processamento de eventos climáticos
+### 👤 Usuários e autenticação
+
+* ✅ Cadastro de usuários
+* ✅ Login com JWT
+* ✅ Rotas protegidas com Spring Security
+* ✅ Integração do Swagger com autenticação Bearer Token
+
+### 🌤️ Clima e previsões
+
+* ✅ Consulta de clima atual por cidade
+* ✅ Consulta de previsão diária
+* ✅ Consulta de previsão por período
+* ✅ Conversão automática de velocidade do vento para km/h
+* ✅ Sistema inteligente de alertas climáticos
+* ✅ Resumos automáticos para previsão diária
+* ✅ Cache para otimização das consultas externas
+
+### ⭐ Cidades favoritas
+
+* ✅ Adicionar cidade favorita
+* ✅ Listar cidades favoritas do usuário autenticado
+* ✅ Remover cidade favorita
+* ✅ Consultar clima atual de todas as cidades favoritas
+
+### 🛠️ Arquitetura
+
+* ✅ DTO Pattern
+* ✅ Tratamento global de exceções
+* ✅ Documentação automática com Swagger
+* ✅ Containerização com Docker
+* ✅ Testes unitários com JUnit e Mockito
 
 ---
 
@@ -39,29 +64,13 @@ API REST desenvolvida com Java e Spring Boot para monitoramento climático em te
 
 A aplicação gera alertas automáticos conforme a intensidade dos ventos:
 
-| Velocidade do vento | Alerta gerado |
-|---|---|
-| Acima de 40 km/h | Alerta de ventos fortes |
-| Acima de 60 km/h | Recomendação para evitar deslocamentos de moto ou bicicleta |
-| Acima de 80 km/h | Alerta severo de ventos fortes |
+| Velocidade do vento | Alerta gerado                            |
+| ------------------- | ---------------------------------------- |
+| Acima de 40 km/h    | Ventos fortes no dia de hoje             |
+| Acima de 60 km/h    | Evite deslocamentos de moto ou bicicleta |
+| Acima de 80 km/h    | Alerta severo de ventos fortes           |
 
----
-
-## 📨 Arquitetura orientada a eventos e mensageria
-
-O projeto está sendo estruturado para trabalhar com processamento assíncrono de eventos climáticos e notificações em tempo real. A arquitetura prevê:
-
-- Envio assíncrono de alertas climáticos
-- Processamento de eventos meteorológicos
-- Desacoplamento entre serviços
-- Escalabilidade horizontal da aplicação
-- Notificações em tempo real
-
-**Tecnologias planejadas:**
-
-- RabbitMQ
-- Apache Kafka
-- Spring Events
+Além disso, o sistema analisa probabilidade de chuva para gerar recomendações e resumos diários.
 
 ---
 
@@ -71,9 +80,12 @@ O projeto está sendo estruturado para trabalhar com processamento assíncrono d
 src/main/java/com/zephyr/api
 │
 ├── client
+├── config
+│   └── security
 ├── controller
 ├── dto
 │   ├── external
+│   ├── request
 │   └── response
 ├── entity
 ├── exception
@@ -83,83 +95,96 @@ src/main/java/com/zephyr/api
 
 ---
 
-## 🔌 Endpoints principais
+## 🔌 Principais endpoints
 
-### 📍 Clima atual
+### 🔐 Autenticação
+
+```http
+POST /auth/register
+POST /auth/login
+GET  /auth/me
+```
+
+### 🌤️ Clima
 
 ```http
 GET /weather/current/{city}
-```
-
-Exemplo:
-
-```http
-GET /weather/current/Florianopolis
-```
-
-### 📍 Previsão do tempo
-
-```http
 GET /weather/forecast/{city}
+GET /weather/hourly/{city}
 ```
 
-### 📍 CRUD meteorológico
+### ⭐ Favoritos
 
 ```http
-POST   /weather
-GET    /weather
-GET    /weather/{id}
-PUT    /weather/{id}
-DELETE /weather/{id}
+POST   /city/favorite
+GET    /city/favorite
+DELETE /city/favorite/{id}
+GET    /city/favorite/weather
 ```
 
 ---
 
 ## 📖 Swagger
 
-Após iniciar a aplicação, acesse a documentação em:
+Após iniciar a aplicação:
 
-```
+```text
 http://localhost:8080/swagger-ui.html
+```
+
+Para acessar rotas protegidas:
+
+1. Faça login em `/auth/login`
+2. Copie o JWT retornado
+3. Clique em **Authorize**
+4. Informe:
+
+```text
+Bearer SEU_TOKEN
 ```
 
 ---
 
-## ⚙️ Configuração
+## 🧪 Testes
 
-No arquivo `application.yml`, configure sua chave da OpenWeather API:
+Atualmente o projeto possui testes unitários cobrindo as principais regras de negócio do módulo de cidades favoritas utilizando:
 
-```yml
-weather:
-  api:
-    key: SUA_API_KEY
-```
+* JUnit 5
+* Mockito
+* Mock de SecurityContext
+* Mock de dependências externas
+
+---
+
+## 📨 Roadmap
+
+### Mensageria
+
+* [ ] RabbitMQ para processamento assíncrono
+* [ ] Publicação de eventos meteorológicos
+* [ ] Notificações climáticas em background
+
+### Inteligência Artificial
+
+* [ ] Geração de recomendações climáticas com IA
+* [ ] Resumos avançados de previsão
+* [ ] Sugestões inteligentes para o usuário
+
 
 ---
 
 ## 🧠 Conceitos aplicados
 
-- Arquitetura em camadas (Controller, Service, Repository)
-- Consumo de APIs REST externas
-- DTO Pattern e desacoplamento de entidades
-- Tratamento global de exceções
-- Conversão e transformação de dados
-- Persistência com JPA / Hibernate
-- Boas práticas REST
-- Containerização com Docker
-- Arquitetura orientada a eventos
-- Mensageria e comunicação assíncrona
-
----
-
-## 📌 Roadmap
-
-- [ ] Filtragem inteligente de previsões por período
-- [ ] Histórico climático
-- [ ] Alertas avançados baseados em clima extremo
-- [ ] Integração com mensageria (RabbitMQ / Kafka)
-- [ ] Deploy em nuvem
-- [ ] Testes automatizados
+* Arquitetura em camadas
+* REST API Design
+* Spring Security + JWT
+* Consumo de APIs externas
+* DTO Pattern
+* Cache
+* Testes unitários
+* Tratamento global de exceções
+* Dockerização
+* Arquitetura orientada a eventos (em evolução)
 
 ---
 
@@ -167,4 +192,4 @@ weather:
 
 **Pamella Binotto**
 
-Projeto pessoal com foco em boas práticas de backend Java, arquitetura distribuída e processamento de eventos.
+Projeto pessoal criado para aprofundar conhecimentos em desenvolvimento backend com Java e Spring, arquitetura distribuída, mensageria, segurança de aplicações e integração com Inteligência Artificial.
