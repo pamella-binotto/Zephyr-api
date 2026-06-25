@@ -6,6 +6,7 @@ import com.zephyr.api.dto.response.FavoriteCityResponseDTO;
 import com.zephyr.api.dto.response.FavoriteCityWeatherResponseDTO;
 import com.zephyr.api.dto.response.UserResponseDTO;
 import com.zephyr.api.entity.FavoriteCity;
+import com.zephyr.api.massaging.RabbitMQProducer;
 import com.zephyr.api.service.FavoriteCityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,9 +23,12 @@ import java.util.List;
 public class FavoriteCityController {
 
     private final FavoriteCityService favoriteCityService;
+    private final RabbitMQProducer rabbitMQProducer;
 
-    public FavoriteCityController(FavoriteCityService favoriteCityService) {
+    public FavoriteCityController(FavoriteCityService favoriteCityService,
+                                  RabbitMQProducer rabbitMQProducer) {
         this.favoriteCityService = favoriteCityService;
+        this.rabbitMQProducer = rabbitMQProducer;
     }
 
     @Operation(summary = "Create new favorite city")
@@ -103,5 +107,17 @@ public class FavoriteCityController {
 
         return ResponseEntity.noContent().build();
 
+    }
+    @Operation(summary = "RabbitMQ test")
+    @PostMapping("/rabbit-test")
+    public ResponseEntity<String> rabbitTest() {
+
+        rabbitMQProducer.send(
+                "Mensagem de teste enviada pela Pamella 🚀"
+        );
+
+        return ResponseEntity.ok(
+                "Mensagem enviada para RabbitMQ"
+        );
     }
 }
