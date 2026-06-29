@@ -1,6 +1,7 @@
 package com.zephyr.api.massaging;
 
 import com.zephyr.api.config.RabbitMQConfig;
+import com.zephyr.api.dto.FavoriteCityEventDTO;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
@@ -14,15 +15,15 @@ public class RabbitMQProducer {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void send (String message) {
+    public void send (FavoriteCityEventDTO event) {
 
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.FAVORITE_CITY_QUEUE,
-                message
+                event
         );
 
         System.out.println("MENSAGEM ENVIADA:");
-        System.out.println(message);
+        System.out.println(event);
 
     }
 }

@@ -1,6 +1,7 @@
 package com.zephyr.api.service;
 
 
+import com.zephyr.api.dto.FavoriteCityEventDTO;
 import com.zephyr.api.dto.FavoriteCityRequestDTO;
 import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
 import com.zephyr.api.dto.response.FavoriteCityWeatherResponseDTO;
@@ -14,6 +15,7 @@ import com.zephyr.api.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,11 +55,18 @@ public class FavoriteCityService {
 
         FavoriteCity savedCity = repository.save(favoriteCity);
 
-        rabbitMQProducer.send(
-                "Cidade favoritada: " + savedCity.getCityName()
+        FavoriteCityEventDTO event = new FavoriteCityEventDTO(
+                savedCity.getId(),
+                savedCity.getCityName(),
+                user.getEmail(),
+                LocalDateTime.now()
+
         );
 
+        rabbitMQProducer.send(event);
+
         return savedCity;
+
     }
 
     public List<FavoriteCity> findAllByUser() {
