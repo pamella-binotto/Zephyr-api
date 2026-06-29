@@ -21,7 +21,7 @@ public class RabbitMQProducer {
                 message
         );
 
-        System.out.println("MENSAGEM RECEBIDA:");
+        System.out.println("MENSAGEM ENVIADA:");
         System.out.println(message);
 
     }

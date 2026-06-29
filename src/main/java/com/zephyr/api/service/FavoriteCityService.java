@@ -8,6 +8,7 @@ import com.zephyr.api.entity.FavoriteCity;
 import com.zephyr.api.entity.User;
 import com.zephyr.api.exception.FavoriteCityNotFoundException;
 import com.zephyr.api.exception.UserNotFoundException;
+import com.zephyr.api.massaging.RabbitMQProducer;
 import com.zephyr.api.repository.FavoriteCityRepository;
 import com.zephyr.api.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,14 +24,17 @@ public class FavoriteCityService {
     private final FavoriteCityRepository repository;
     private final UserRepository userRepository;
     private final WeatherDataService weatherDataService;
+    private final RabbitMQProducer rabbitMQProducer;
 
     public FavoriteCityService(FavoriteCityRepository repository,
                                UserRepository userRepository,
-                               WeatherDataService weatherDataService) {
+                               WeatherDataService weatherDataService,
+                               RabbitMQProducer rabbitMQProducer) {
 
         this.repository = repository;
         this.userRepository = userRepository;
         this.weatherDataService = weatherDataService;
+        this.rabbitMQProducer = rabbitMQProducer;
     }
 
     public FavoriteCity save(FavoriteCityRequestDTO dto) {
@@ -47,7 +51,13 @@ public class FavoriteCityService {
                 user
         );
 
-        return repository.save(favoriteCity);
+        FavoriteCity savedCity = repository.save(favoriteCity);
+
+        rabbitMQProducer.send(
+                "Cidade favoritada: " + savedCity.getCityName()
+        );
+
+        return savedCity;
     }
 
     public List<FavoriteCity> findAllByUser() {

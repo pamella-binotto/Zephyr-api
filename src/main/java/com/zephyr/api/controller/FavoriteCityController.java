@@ -23,12 +23,9 @@ import java.util.List;
 public class FavoriteCityController {
 
     private final FavoriteCityService favoriteCityService;
-    private final RabbitMQProducer rabbitMQProducer;
 
-    public FavoriteCityController(FavoriteCityService favoriteCityService,
-                                  RabbitMQProducer rabbitMQProducer) {
+    public FavoriteCityController(FavoriteCityService favoriteCityService) {
         this.favoriteCityService = favoriteCityService;
-        this.rabbitMQProducer = rabbitMQProducer;
     }
 
     @Operation(summary = "Create new favorite city")
@@ -107,17 +104,5 @@ public class FavoriteCityController {
 
         return ResponseEntity.noContent().build();
 
-    }
-    @Operation(summary = "RabbitMQ test")
-    @PostMapping("/rabbit-test")
-    public ResponseEntity<String> rabbitTest() {
-
-        rabbitMQProducer.send(
-                "Mensagem de teste enviada pela Pamella 🚀"
-        );
-
-        return ResponseEntity.ok(
-                "Mensagem enviada para RabbitMQ"
-        );
     }
 }
