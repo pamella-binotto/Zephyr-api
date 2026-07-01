@@ -9,7 +9,7 @@ import com.zephyr.api.entity.FavoriteCity;
 import com.zephyr.api.entity.User;
 import com.zephyr.api.exception.FavoriteCityNotFoundException;
 import com.zephyr.api.exception.UserNotFoundException;
-import com.zephyr.api.massaging.RabbitMQProducer;
+import com.zephyr.api.messaging.RabbitMQProducer;
 import com.zephyr.api.repository.FavoriteCityRepository;
 import com.zephyr.api.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;

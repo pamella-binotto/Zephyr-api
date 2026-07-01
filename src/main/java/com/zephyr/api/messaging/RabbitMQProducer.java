@@ -1,4 +1,4 @@
-package com.zephyr.api.massaging;
+package com.zephyr.api.messaging;
 
 import com.zephyr.api.config.RabbitMQConfig;
 import com.zephyr.api.dto.FavoriteCityEventDTO;
@@ -22,7 +22,7 @@ public class RabbitMQProducer {
                 event
         );
 
-        System.out.println("MENSAGEM ENVIADA:");
+        System.out.println("Message sent: ");
         System.out.println(event);
 
     }
