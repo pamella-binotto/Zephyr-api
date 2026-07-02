@@ -1,5 +1,6 @@
 package com.zephyr.api.service;
 
+import com.zephyr.api.dto.ai.AIResponseDTO;
 import com.zephyr.api.dto.response.CurrentWeatherResponseDTO;
 import org.springframework.stereotype.Service;
 
@@ -10,5 +11,6 @@ public class AIRecommendationService {
 
         return "";
     }
+
 }
 
