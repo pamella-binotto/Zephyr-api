@@ -19,4 +19,14 @@ public class AIResponseDTO {
     public void setChoices(List<ChoiceDTO> choices) {
         this.choices = choices;
     }
+
+    public String getContent() {
+
+        if (choices == null || choices.isEmpty()) {
+            return "Nenhuma resposta foi retornada pela IA.";
+        }
+        return choices.get(0)
+                .getMessage()
+                .getContent();
+    }
 }

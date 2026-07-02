@@ -26,11 +26,7 @@ public class AIRecommendationService {
         AIResponseDTO response =
                 aiClient.sendPrompt(prompt);
 
-        ChoiceDTO choice = response.getChoices().get(0);
-        return choice.getMessage().getContent();
-
-
+      return response.getContent();
     }
-
 }
 
