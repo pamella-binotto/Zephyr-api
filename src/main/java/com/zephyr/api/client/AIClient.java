@@ -4,12 +4,10 @@ import com.zephyr.api.dto.ai.AIRequestDTO;
 import com.zephyr.api.dto.ai.AIResponseDTO;
 import com.zephyr.api.dto.ai.MessageDTO;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.MediaType;
 import java.util.List;
 
 @Component
@@ -52,8 +50,14 @@ public class AIClient {
                new HttpEntity<>(request, headers);
 
 
-       return null;
+       ResponseEntity<AIResponseDTO> response =
+               restTemplate.exchange(url,
+                       HttpMethod.POST,
+                       entity,
+                       AIResponseDTO.class);
 
+
+       return response.getBody();
    }
 
 }
