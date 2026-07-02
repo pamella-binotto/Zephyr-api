@@ -22,7 +22,7 @@ public class RabbitMQConsumer {
 
     @RabbitListener(queues = RabbitMQConfig.FAVORITE_CITY_QUEUE)
     public void receiveMessage(FavoriteCityEventDTO event){
-        System.out.println("Message received: ");
+        System.out.println("Message received:");
         System.out.println(event);
 
         CurrentWeatherResponseDTO weather =
