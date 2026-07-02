@@ -17,4 +17,6 @@ public class ChoiceDTO {
     public void setMessage(MessageDTO message) {
         this.message = message;
     }
+
+
 }

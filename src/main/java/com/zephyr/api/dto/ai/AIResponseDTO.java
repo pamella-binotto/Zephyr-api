@@ -6,4 +6,17 @@ public class AIResponseDTO {
 
     private List<ChoiceDTO> choices;
 
+    public AIResponseDTO(List<ChoiceDTO> choices) {
+        this.choices = choices;
+    }
+
+    public AIResponseDTO() {}
+
+    public List<ChoiceDTO> getChoices() {
+        return choices;
+    }
+
+    public void setChoices(List<ChoiceDTO> choices) {
+        this.choices = choices;
+    }
 }
