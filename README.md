@@ -1,82 +1,138 @@
 # 🌦️ Zephyr API
 
-API REST desenvolvida com Java e Spring Boot para monitoramento climático em tempo real, autenticação de usuários, gerenciamento de cidades favoritas e geração de alertas inteligentes com base em dados meteorológicos obtidos da OpenWeather API.
+Plataforma backend inteligente desenvolvida com **Java e Spring Boot** para monitoramento climático em tempo real, autenticação de usuários, gerenciamento de cidades favoritas e geração de recomendações climáticas personalizadas utilizando **Inteligência Artificial**.
+
+O projeto integra serviços externos, mensageria assíncrona e arquitetura moderna para entregar uma solução escalável, desacoplada e orientada a eventos.
 
 ---
 
 ## 🚀 Tecnologias utilizadas
 
-* Java 17
-* Spring Boot
-* Spring Web
-* Spring Data JPA
-* Spring Security
-* JWT Authentication
-* Spring Cache
-* PostgreSQL
-* Hibernate / JPA
-* Swagger / OpenAPI
-* JUnit 5
-* Mockito
-* Maven
-* Docker & Docker Compose
-* OpenWeather API
+- Java 17
+- Spring Boot
+- Spring Web
+- Spring Data JPA
+- Spring Security
+- JWT Authentication
+- Spring Cache
+- PostgreSQL
+- Hibernate / JPA
+- RabbitMQ
+- Docker & Docker Compose
+- Swagger / OpenAPI
+- Maven
+- JUnit 5
+- Mockito
+- OpenWeather API
+- OpenRouter AI (GPT-4o)
 
 ---
 
-## 📌 Funcionalidades atuais
+## 📌 Funcionalidades
 
 ### 👤 Usuários e autenticação
 
-* ✅ Cadastro de usuários
-* ✅ Login com JWT
-* ✅ Rotas protegidas com Spring Security
-* ✅ Integração do Swagger com autenticação Bearer Token
+- ✅ Cadastro de usuários
+- ✅ Login com JWT
+- ✅ Rotas protegidas com Spring Security
+- ✅ Integração do Swagger com autenticação Bearer Token
+
+---
 
 ### 🌤️ Clima e previsões
 
-* ✅ Consulta de clima atual por cidade
-* ✅ Consulta de previsão diária
-* ✅ Consulta de previsão por período
-* ✅ Conversão automática de velocidade do vento para km/h
-* ✅ Sistema inteligente de alertas climáticos
-* ✅ Resumos automáticos para previsão diária
-* ✅ Cache para otimização das consultas externas
+- ✅ Consulta de clima atual por cidade
+- ✅ Consulta de previsão diária
+- ✅ Consulta de previsão horária
+- ✅ Conversão automática da velocidade do vento para km/h
+- ✅ Sistema inteligente de alertas climáticos
+- ✅ Cache para otimização das consultas externas
+
+---
 
 ### ⭐ Cidades favoritas
 
-* ✅ Adicionar cidade favorita
-* ✅ Listar cidades favoritas do usuário autenticado
-* ✅ Remover cidade favorita
-* ✅ Consultar clima atual de todas as cidades favoritas
+- ✅ Adicionar cidade favorita
+- ✅ Listar cidades favoritas do usuário autenticado
+- ✅ Remover cidade favorita
+- ✅ Consultar o clima atual de todas as cidades favoritas
 
-### 🛠️ Arquitetura
+---
 
-* ✅ DTO Pattern
-* ✅ Tratamento global de exceções
-* ✅ Documentação automática com Swagger
-* ✅ Containerização com Docker
-* ✅ Testes unitários com JUnit e Mockito
+### 📨 Arquitetura orientada a eventos
+
+Quando um usuário favorita uma cidade, a aplicação executa automaticamente um fluxo assíncrono:
+
+- ✅ Publicação do evento utilizando RabbitMQ
+- ✅ Processamento assíncrono pelo Consumer
+- ✅ Consulta automática da OpenWeather API
+- ✅ Geração de recomendação personalizada utilizando IA
+- ✅ Fluxo desacoplado entre Producer e Consumer
+
+---
+
+## 🤖 Inteligência Artificial
+
+O Zephyr utiliza **OpenRouter AI (GPT-4o)** para gerar recomendações climáticas inteligentes.
+
+A IA recebe informações como:
+
+- Cidade
+- Temperatura
+- Umidade
+- Velocidade do vento
+- Alertas meteorológicos
+
+E produz recomendações amigáveis e contextualizadas.
+
+### Exemplo
+
+> Hoje em Florianópolis a umidade está alta, então um casaco leve pode ajudar. Aproveite o dia com calma e curta os momentos agradáveis!
 
 ---
 
 ## 🌪️ Sistema de alertas climáticos
 
-A aplicação gera alertas automáticos conforme a intensidade dos ventos:
+A aplicação gera alertas automáticos conforme as condições meteorológicas.
 
-| Velocidade do vento | Alerta gerado                            |
-| ------------------- | ---------------------------------------- |
-| Acima de 40 km/h    | Ventos fortes no dia de hoje             |
-| Acima de 60 km/h    | Evite deslocamentos de moto ou bicicleta |
-| Acima de 80 km/h    | Alerta severo de ventos fortes           |
+| Condição | Alerta |
+|----------|---------|
+| Ventos fortes | Evite deslocamentos de moto ou bicicleta |
+| Tempestades | Evite permanecer em áreas abertas |
+| Chuva intensa | Leve guarda-chuva e dirija com atenção |
 
-Além disso, o sistema analisa probabilidade de chuva para gerar recomendações e resumos diários.
+---
+
+## 🔄 Fluxo da aplicação
+
+```text
+Usuário
+   │
+   ▼
+JWT Authentication
+   │
+   ▼
+Favoritar Cidade
+   │
+   ▼
+RabbitMQ (Producer)
+   │
+   ▼
+RabbitMQ (Consumer)
+   │
+   ├──► OpenWeather API
+   │
+   └──► OpenRouter AI
+            │
+            ▼
+Recomendação Inteligente
+```
 
 ---
 
 ## 📂 Estrutura do projeto
 
-```bash
+```text
 src/main/java/com/zephyr/api
 │
 ├── client
@@ -84,11 +140,13 @@ src/main/java/com/zephyr/api
 │   └── security
 ├── controller
 ├── dto
-│   ├── external
+│   ├── ai
 │   ├── request
 │   └── response
 ├── entity
 ├── exception
+├── messaging
+├── prompt
 ├── repository
 ├── service
 ```
@@ -110,7 +168,7 @@ GET  /auth/me
 ```http
 GET /weather/current/{city}
 GET /weather/forecast/{city}
-GET /weather/hourly/{city}
+GET /weather/forecast/hourly/{city}
 ```
 
 ### ⭐ Favoritos
@@ -124,7 +182,7 @@ GET    /city/favorite/weather
 
 ---
 
-## 📖 Swagger
+## 📖 Documentação (Swagger)
 
 Após iniciar a aplicação:
 
@@ -147,44 +205,39 @@ Bearer SEU_TOKEN
 
 ## 🧪 Testes
 
-Atualmente o projeto possui testes unitários cobrindo as principais regras de negócio do módulo de cidades favoritas utilizando:
+O projeto possui testes unitários utilizando:
 
-* JUnit 5
-* Mockito
-* Mock de SecurityContext
-* Mock de dependências externas
-
----
-
-## 📨 Roadmap
-
-### Mensageria
-
-* [ ] RabbitMQ para processamento assíncrono
-* [ ] Publicação de eventos meteorológicos
-* [ ] Notificações climáticas em background
-
-### Inteligência Artificial
-
-* [ ] Geração de recomendações climáticas com IA
-* [ ] Resumos avançados de previsão
-* [ ] Sugestões inteligentes para o usuário
-
+- JUnit 5
+- Mockito
+- Mock de SecurityContext
+- Mock de dependências externas
 
 ---
 
 ## 🧠 Conceitos aplicados
 
-* Arquitetura em camadas
-* REST API Design
-* Spring Security + JWT
-* Consumo de APIs externas
-* DTO Pattern
-* Cache
-* Testes unitários
-* Tratamento global de exceções
-* Dockerização
-* Arquitetura orientada a eventos (em evolução)
+- Arquitetura em camadas
+- REST API Design
+- Spring Security + JWT
+- Consumo de APIs externas
+- Integração entre múltiplas APIs
+- DTO Pattern
+- Prompt Engineering
+- Cache
+- RabbitMQ
+- Arquitetura orientada a eventos
+- Mensageria assíncrona
+- Inteligência Artificial Generativa
+- Docker
+- Testes unitários
+- Tratamento global de exceções
+
+---
+
+## 🚀 Roadmap
+
+- [ ] Deploy em ambiente cloud
+- [ ] Interface web em React consumindo a API
 
 ---
 
@@ -192,4 +245,4 @@ Atualmente o projeto possui testes unitários cobrindo as principais regras de n
 
 **Pamella Binotto**
 
-Projeto pessoal criado para aprofundar conhecimentos em desenvolvimento backend com Java e Spring, arquitetura distribuída, mensageria, segurança de aplicações e integração com Inteligência Artificial.
+Projeto pessoal desenvolvido para aprofundar conhecimentos em desenvolvimento backend moderno com Java e Spring Boot, explorando segurança com JWT, arquitetura orientada a eventos, mensageria com RabbitMQ, integração com APIs externas e Inteligência Artificial Generativa.
