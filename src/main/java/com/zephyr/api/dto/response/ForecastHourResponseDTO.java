@@ -9,6 +9,7 @@ public class ForecastHourResponseDTO {
     private Double rainProbability;
     private String windAlert;
     private String rainAlert;
+    private String icon;
 
     public String getDateTime() {
         return dateTime;
@@ -66,14 +67,25 @@ public class ForecastHourResponseDTO {
         this.rainAlert = rainAlert;
     }
 
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
     public ForecastHourResponseDTO(String dateTime, Double temperature,
                                    Double humidity, Double windSpeed,
-                                   Double rainProbability, String windAlert, String rainAlert) {
+                                   Double rainProbability, String windAlert, String rainAlert,
+                                   String icon) {
         this.dateTime = dateTime;
         this.temperature = temperature;
         this.humidity = humidity;
         this.windSpeed = windSpeed;
         this.rainProbability = rainProbability;
+        this.icon = icon;
+
 
 
     }

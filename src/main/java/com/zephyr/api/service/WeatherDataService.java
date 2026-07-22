@@ -276,7 +276,8 @@ public class WeatherDataService {
                             windSpeedKm,
                             rainProbability,
                             windAlert,
-                            rainAlert
+                            rainAlert,
+                            item.getWeather().get(0).getIcon()
                     );
 
             hourlyForecast.add(dto);

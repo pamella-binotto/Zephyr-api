@@ -1,7 +1,10 @@
 package com.zephyr.api.dto;
 
 import com.zephyr.api.dto.external.MainWeatherDTO;
+import com.zephyr.api.dto.external.WeatherConditionDTO;
 import com.zephyr.api.dto.external.WindDTO;
+
+import java.util.List;
 
 public class ForecastItemDTO {
 
@@ -9,14 +12,16 @@ public class ForecastItemDTO {
     private WindDTO wind;
     private String dt_txt;
     private Double pop;
+    private List<WeatherConditionDTO> weather;
 
 
     public ForecastItemDTO(MainWeatherDTO main, WindDTO wind, String dt_txt,
-                           Double pop) {
+                           Double pop, List<WeatherConditionDTO> weather) {
         this.main = main;
         this.wind = wind;
         this.dt_txt = dt_txt;
         this.pop = pop;
+        this.weather = weather;
     }
 
     public MainWeatherDTO getMain() {
@@ -49,5 +54,13 @@ public class ForecastItemDTO {
 
     public void setPop(Double pop) {
         this.pop = pop;
+    }
+
+    public List<WeatherConditionDTO> getWeather() {
+        return weather;
+    }
+
+    public void setWeather(List<WeatherConditionDTO> weather) {
+        this.weather = weather;
     }
 }
